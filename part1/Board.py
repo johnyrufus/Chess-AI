@@ -8,9 +8,18 @@ class PlayBoard:
         self.state = state
         self.score = 0
         
-def print_state(self):
-    print(*self.state, sep="\n")            
+    def __repr__(self):
+        rep = "  | A| B| C| D| E| F| G| H|\n"
+        for i in range(0, 8):
+            row = self.state[7 - i]
             
+            rep += str(7 - i) + " |"
+            for piece in row:
+                if piece == "": rep += "  |"
+                else: rep += str(piece) + "|"            
+            rep += "\n"
+        return rep
+                    
 def Parse(raw_input):
     state = []
     
@@ -28,8 +37,8 @@ def Parse(raw_input):
             elif char == "n": row.append(Pieces.Knight("b", r, c))
             elif char == "R": row.append(Pieces.Rook("w", r, c))
             elif char == "r": row.append(Pieces.Rook("b", r, c))
-            elif char == "Q": row.append(Pieces.Rook("w", r, c))
-            elif char == "q": row.append(Pieces.Rook("b", r, c))
+            elif char == "Q": row.append(Pieces.Queen("w", r, c))
+            elif char == "q": row.append(Pieces.Queen("b", r, c))
             else: row.append("")
         state.append(row)
 
