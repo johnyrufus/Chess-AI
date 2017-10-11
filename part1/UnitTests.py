@@ -5,7 +5,7 @@ def run_tests():
     #Checking king movement when alone
     test = '...........................K....................................'
     test_case = Board.Parse(test)
-    assert(test_case.state[3][3].moves(test_case.state) == [((3, 3), (4, 3)), ((3, 3), (2, 3)), ((3, 3), (3, 4)), ((3, 3), (3, 2))])
+    assert(test_case.state[3][3].moves(test_case.state) == [((3, 3), (4, 3)), ((3, 3), (3, 4)), ((3, 3), (2, 3)), ((3, 3), (3, 2))])
 
     #Checking king movement when surrounded
     test = '...................P......PKP......P............................'
@@ -15,7 +15,7 @@ def run_tests():
     #Checking king movement when capture
     test = '...................p......pKp......p............................'
     test_case = Board.Parse(test)
-    assert(test_case.state[3][3].moves(test_case.state) == [((3, 3), (4, 3)), ((3, 3), (2, 3)), ((3, 3), (3, 4)), ((3, 3), (3, 2))])
+    assert(test_case.state[3][3].moves(test_case.state) == [((3, 3), (4, 3)), ((3, 3), (3, 4)), ((3, 3), (2, 3)), ((3, 3), (3, 2))])
 
     #Checking knight movement when alone
     test = '...........................N....................................'
@@ -55,3 +55,33 @@ def run_tests():
     test = '..................P.P......B......P.P...........................'
     test_case = Board.Parse(test)
     assert(test_case.state[3][3].moves(test_case.state) == [])
+
+    #Checking pawn movement
+    test = '...........................P....................................'
+    test_case = Board.Parse(test)
+    assert(test_case.state[3][3].moves(test_case.state) == [((3, 3), (4, 3))])
+
+    test = '...........................p....................................'
+    test_case = Board.Parse(test)
+    assert(test_case.state[3][3].moves(test_case.state) == [((3, 3), (2, 3))])
+
+    test = '...........P....................................................'
+    test_case = Board.Parse(test)
+    assert(test_case.state[1][3].moves(test_case.state) == [((1, 3), (2, 3)), ((1, 3), (3, 3))])
+
+    test = '...................................................p............'
+    test_case = Board.Parse(test)
+    assert(test_case.state[6][3].moves(test_case.state) == [((6, 3), (5, 3)), ((6, 3), (4, 3))])
+
+    #Testing capture
+    test = '..........................................PpP......p............'
+    test_case = Board.Parse(test)
+    assert(test_case.state[6][3].moves(test_case.state) == [((6, 3), (5, 4)), ((6, 3), (5, 2))])
+    
+    #Queen movement
+    test = '...........................Q....................................'
+    test_case = Board.Parse(test)
+    assert(len(test_case.state[3][3].moves(test_case.state)) == 25)
+    
+
+if __name__ == "__main__": run_tests()
