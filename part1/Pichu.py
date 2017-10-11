@@ -23,5 +23,6 @@ if __name__ == "__main__":
     time_limit = 10
     
     root = Board.Parse(state)
+    print(root)
     
     UnitTests.run_tests()
