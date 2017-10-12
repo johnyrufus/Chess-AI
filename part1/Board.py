@@ -6,7 +6,6 @@ import Pieces
 class PlayBoard:
     def __init__(self, state):
         self.state = state
-        self.score = 0
         
     def __repr__(self):
         rep = "  | A| B| C| D| E| F| G| H|\n"
@@ -19,7 +18,38 @@ class PlayBoard:
                 else: rep += str(piece) + "|"            
             rep += "\n"
         return rep
+    
+    def score(self, side):
+        points = 0
+        
+        my_king = False
+        opp_king = False
+        
+        for row in self.state:
+            for piece in row:
+                if piece != "":
+                    if piece.color == side: points += piece.score(self)
+                    else: points -= piece.score(self)
                     
+                    if type(piece) == Pieces.King:
+                        if piece.color == side: my_king = True
+                        else: opp_king = True
+        
+        if my_king and not opp_king: points = 999
+        if not my_king and opp_king: points = -999
+        
+        return round(points, 5)
+    
+    def getmoves(self, side):
+        moves = []
+        
+        for row in self.state:
+            for piece in row:
+                if piece != "":
+                    if piece.color == side:
+                        moves += piece.moves(self.state)
+        return moves
+    
 def Parse(raw_input):
     state = []
     
