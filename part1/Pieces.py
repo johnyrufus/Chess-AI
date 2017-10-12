@@ -20,13 +20,26 @@ class King(Piece):
         possible = []
         
         for i in [1, -1]:
+            #Up/Down
             valid, _ = ValidMove(board, self, self.row + i, self.col)
             if valid: possible.append((self.pos, self.offset(i, 0)))
         
+            #Left/Right
             valid, _ = ValidMove(board, self, self.row, self.col + i)
+            if valid: possible.append((self.pos, self.offset(0, i)))
+            
+            #Up/Right and Down/Left
+            valid, _ = ValidMove(board, self, self.row + i, self.col + i)
+            if valid: possible.append((self.pos, self.offset(0, i)))
+            
+            #Up/Left and Down/Right
+            valid, _ = ValidMove(board, self, self.row + i, self.col - i)
             if valid: possible.append((self.pos, self.offset(0, i)))
 
         return possible
+
+    def score(self, board):
+        return 0
 
 class Knight(Piece):
     move_r = [-2, -1, -2, 1, 2, -1, 2, 1]
@@ -44,6 +57,9 @@ class Knight(Piece):
             if valid: possible.append((self.pos, self.offset(r, c)))
 
         return possible
+
+    def score(self, board):
+        return 3.2
    
 class Rook(Piece):
     def __repr__(self):
@@ -58,6 +74,9 @@ class Rook(Piece):
             possible += GoInDirection(board, self, 0, i) #Left/Right
         
         return possible   
+
+    def score(self, board):
+        return 5.1
  
 class Bishop(Piece):
     def __repr__(self):
@@ -73,6 +92,9 @@ class Bishop(Piece):
             
         return possible          
         
+    def score(self, board):
+        return 3.33
+
 class Queen(Piece):
     def __repr__(self):
         if self.color == "w": return u'♕'
@@ -88,6 +110,9 @@ class Queen(Piece):
             possible += GoInDirection(board, self, i, -i) #DownRight/UpLeft
         
         return possible
+
+    def score(self, board):
+        return 8.8
 
 class Pawn(Piece):
     def __repr__(self):
@@ -115,6 +140,9 @@ class Pawn(Piece):
         if valid and not cont: possible.append((self.pos, (self.row + step, self.col - 1)))        
 
         return possible
+
+    def score(self, board):
+        return 1
         
 def ValidMove(board, piece, row, col):
     if row < 0 or row > 7 or col < 0 or col > 7: #Out of Bounds
