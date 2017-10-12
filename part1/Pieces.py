@@ -30,11 +30,11 @@ class King(Piece):
             
             #Up/Right and Down/Left
             valid, _ = ValidMove(board, self, self.row + i, self.col + i)
-            if valid: possible.append((self.pos, self.offset(0, i)))
+            if valid: possible.append((self.pos, self.offset(i, i)))
             
             #Up/Left and Down/Right
             valid, _ = ValidMove(board, self, self.row + i, self.col - i)
-            if valid: possible.append((self.pos, self.offset(0, i)))
+            if valid: possible.append((self.pos, self.offset(i, -i)))
 
         return possible
 
@@ -153,21 +153,25 @@ def ValidMove(board, piece, row, col):
         return True, False
     else:
         return False, False
-    
-def GoInDirection(board, piece, row, col):
+
+
+'''
+Takes in a direction represented by row_incr, col_incr, and 
+return all possible valid moves that can be made in that direction.
+'''
+def GoInDirection(board, piece, row_incr, col_incr):
     moves = []
-    
-    r = row
-    c = col
-    
-    valid, cont = ValidMove(board, piece, piece.row + r, piece.col + c)
-    while valid:
-        moves.append((piece.pos, piece.offset(r, c)))
-        
-        if not cont: return moves
-        
-        r += row
-        c += col
-        valid, cont = ValidMove(board, piece, piece.row + r, piece.col + c)
-    
+
+    r_off = row_incr
+    c_off = col_incr
+
+    cont = True
+    while cont:
+        valid, cont = ValidMove(board, piece, piece.row + r_off, piece.col + c_off)
+        if valid:
+            moves.append((piece.pos, piece.offset(r_off, c_off)))
+
+        r_off += row_incr
+        c_off += col_incr
+
     return moves
