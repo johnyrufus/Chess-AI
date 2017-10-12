@@ -36,9 +36,9 @@ def run_tests():
 
     #Checking rook capture.
     test = '...................p......pRp..............p....................'
-    test_case = Board.Parse(test)    
-    assert(test_case.state[3][3].moves(test_case.state) == [((3, 3), (4, 3)), ((3, 3), (5, 3)), ((3, 3), (2, 3)), \
-                                                           ((3, 3), (3, 4)), ((3, 3), (3, 2))])
+    test_case = Board.Parse(test)  
+    assert(test_case.state[3][3].moves(test_case.state) == [((3, 3), (2, 3)), ((3, 3), (3, 2)), ((3, 3), (4, 3)), \
+                                                           ((3, 3), (5, 3)), ((3, 3), (3, 4))])
 
     #Checking rook surrounded.
     test = '...................P......PRP......P............................'
@@ -48,8 +48,8 @@ def run_tests():
     #Checking Bishop capture.
     test = '..................p.p......B......p.p...........................'
     test_case = Board.Parse(test)
-    assert(test_case.state[3][3].moves(test_case.state) == [((3, 3), (4, 4)), ((3, 3), (4, 2)), ((3, 3), (2, 4)), \
-                                                           ((3, 3), (2, 2))])
+    assert(test_case.state[3][3].moves(test_case.state) == [((3, 3), (2, 2)), ((3, 3), (2, 4)), ((3, 3), \
+                                                           (4, 4)), ((3, 3), (4, 2))])
 
     #Checking Bishop surrounded.
     test = '..................P.P......B......P.P...........................'
@@ -81,7 +81,7 @@ def run_tests():
     #Queen movement
     test = '...........................Q....................................'
     test_case = Board.Parse(test)
-    assert(len(test_case.state[3][3].moves(test_case.state)) == 25)
+    assert(len(test_case.state[3][3].moves(test_case.state)) == 28)
     
 
 if __name__ == "__main__": run_tests()
