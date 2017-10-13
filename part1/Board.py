@@ -2,13 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import Pieces
+from Position import Position
+import copy
 
 class PlayBoard:
     def __init__(self, state):
         self.state = state
         
     def __repr__(self):
-        rep = "  | A| B| C| D| E| F| G| H|\n"
+        #Commenting temporarily for alternative represenation to make it easier to check manually with test cases
+        '''rep = "  | A| B| C| D| E| F| G| H|\n"
         for i in range(0, 8):
             row = self.state[7 - i]
             
@@ -17,8 +20,22 @@ class PlayBoard:
                 if piece == "": rep += "  |"
                 else: rep += str(piece) + "|"            
             rep += "\n"
-        return rep
-    
+            #return rep '''
+        # Alternate representation to correlate with test case verification: Ridiculously long :)
+        return '\n'+'\n'.join([ ''.join(map(lambda piece: '.' if piece == '' else piece.__class__.__name__[0]
+                if piece.color == 'w' else piece.__class__.__name__[0].lower(), row))for row in self.state])
+
+    @staticmethod
+    def opponent(player):
+        return 'b' if player == 'w' else 'w'
+
+    '''
+    A state is terminal, if a king is missing.
+    For the current purposes of the algorithm, doesn't matter which king is missing.
+    '''
+    def is_terminal(self):
+        return len([1 for row in self.state for piece in row if type(piece) == Pieces.King]) != 2
+
     def score(self, side):
         points = 0
         
@@ -43,13 +60,33 @@ class PlayBoard:
     def getmoves(self, side):
         moves = []
         
-        for row in self.state:
-            for piece in row:
+        for i, row in enumerate(self.state):
+            for j, piece in enumerate(row):
                 if piece != "":
                     if piece.color == side:
-                        moves += piece.moves(self.state)
+                        moves += piece.moves(self.state, Position.get(i, j))
         return moves
-    
+
+    '''
+    Given the current location pos, move the piece in pos to its new location specified by new_pos
+    create and return a new board to reflect the move and the changed state
+    '''
+    # TODO: MORE TEST  CASES NEEDED
+    def move(self, pos, new_pos):
+        new_state = [row for row in self.state]
+        new_state[pos.row] = new_state[pos.row][:pos.col] + [''] + new_state[pos.row][pos.col+1:]
+        new_state[new_pos.row] = new_state[new_pos.row][:new_pos.col] + [self.state[pos.row][pos.col]] + new_state[new_pos.row][new_pos.col + 1:]
+        return PlayBoard(new_state)
+
+    '''
+    Returns the next set of states for a given player
+    '''
+
+    # TODO: ADD TEST CASES
+    def get_next_states(self, player):
+        return [self.move(move[0], move[1]) for move in self.getmoves(player)]
+
+
 def Parse(raw_input):
     state = []
     
@@ -57,18 +94,19 @@ def Parse(raw_input):
         row = []
         for c in range(0, 8):
             char = raw_input[r*8+c]
-            if char == "K": row.append(Pieces.King("w", r, c))
-            elif char == "k": row.append(Pieces.King("b", r, c))
-            elif char == "P": row.append(Pieces.Pawn("w", r, c))
-            elif char == "p": row.append(Pieces.Pawn("b", r, c))
-            elif char == "B": row.append(Pieces.Bishop("w", r, c))
-            elif char == "b": row.append(Pieces.Bishop("b", r, c))
-            elif char == "N": row.append(Pieces.Knight("w", r, c))
-            elif char == "n": row.append(Pieces.Knight("b", r, c))
-            elif char == "R": row.append(Pieces.Rook("w", r, c))
-            elif char == "r": row.append(Pieces.Rook("b", r, c))
-            elif char == "Q": row.append(Pieces.Queen("w", r, c))
-            elif char == "q": row.append(Pieces.Queen("b", r, c))
+            pos = Position.get(r, c)
+            if char == "K": row.append(Pieces.King("w"))
+            elif char == "k": row.append(Pieces.King("b"))
+            elif char == "P": row.append(Pieces.Pawn("w"))
+            elif char == "p": row.append(Pieces.Pawn("b"))
+            elif char == "B": row.append(Pieces.Bishop("w"))
+            elif char == "b": row.append(Pieces.Bishop("b"))
+            elif char == "N": row.append(Pieces.Knight("w"))
+            elif char == "n": row.append(Pieces.Knight("b"))
+            elif char == "R": row.append(Pieces.Rook("w"))
+            elif char == "r": row.append(Pieces.Rook("b"))
+            elif char == "Q": row.append(Pieces.Queen("w"))
+            elif char == "q": row.append(Pieces.Queen("b"))
             else: row.append("")
         state.append(row)
 

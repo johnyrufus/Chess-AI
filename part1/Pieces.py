@@ -1,44 +1,51 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import abc
+from Position import Position
+
+
 class Piece():
-    def __init__(self, color, row, col):
+    def __init__(self, color):
         self.color = color
-        self.row = row
-        self.col = col
-        self.pos = (row, col)
-        
-    def offset(self, r, c):
-        return (self.row + r, self.col + c)
-    
+
+    @abc.abstractmethod
+    def moves(self, board, pos):
+        return
+
+    @abc.abstractmethod
+    def score(self, board, pos):
+        return
+
+
 class King(Piece):
     def __repr__(self):
         if self.color == "w": return u'♔'
         else: return u'♚'
         
-    def moves(self, board):
+    def moves(self, board, pos):
         possible = []
         
         for i in [1, -1]:
             #Up/Down
-            valid, _ = ValidMove(board, self, self.row + i, self.col)
-            if valid: possible.append((self.pos, self.offset(i, 0)))
+            valid, _ = ValidMove(board, self, pos.offset(i, 0))
+            if valid: possible.append((pos, pos.offset(i, 0)))
         
             #Left/Right
-            valid, _ = ValidMove(board, self, self.row, self.col + i)
-            if valid: possible.append((self.pos, self.offset(0, i)))
+            valid, _ = ValidMove(board, self, pos.offset(0, i))
+            if valid: possible.append((pos, pos.offset(0, i)))
             
             #Up/Right and Down/Left
-            valid, _ = ValidMove(board, self, self.row + i, self.col + i)
-            if valid: possible.append((self.pos, self.offset(i, i)))
+            valid, _ = ValidMove(board, self, pos.offset(i, i))
+            if valid: possible.append((pos, pos.offset(i, i)))
             
             #Up/Left and Down/Right
-            valid, _ = ValidMove(board, self, self.row + i, self.col - i)
-            if valid: possible.append((self.pos, self.offset(i, -i)))
+            valid, _ = ValidMove(board, self, pos.offset(i, -i))
+            if valid: possible.append((pos, pos.offset(i, -i)))
 
         return possible
 
-    def score(self, board):
+    def score(self, board, pos):
         return 0
 
 class Knight(Piece):
@@ -49,16 +56,16 @@ class Knight(Piece):
         if self.color == "w": return u'♘'
         else: return u'♞'   
 
-    def moves(self, board):        
+    def moves(self, board, pos):
         possible = []
         
         for r, c in zip(self.move_r, self.move_c):
-            valid, _ = ValidMove(board, self, self.row + r, self.col + c)
-            if valid: possible.append((self.pos, self.offset(r, c)))
+            valid, _ = ValidMove(board, self, pos.offset(r, c))
+            if valid: possible.append((pos, pos.offset(r, c)))
 
         return possible
 
-    def score(self, board):
+    def score(self, board, pos):
         return 3.2
    
 class Rook(Piece):
@@ -66,16 +73,16 @@ class Rook(Piece):
         if self.color == "w": return u'♖'
         else: return u'♜'    
         
-    def moves(self, board):
+    def moves(self, board, pos):
         possible = []
         
         for i in [-1, 1]:
-            possible += GoInDirection(board, self, i, 0) #Up/Down
-            possible += GoInDirection(board, self, 0, i) #Left/Right
+            possible += GoInDirection(board, self, pos, i, 0) #Up/Down
+            possible += GoInDirection(board, self, pos, 0, i) #Left/Right
         
         return possible   
 
-    def score(self, board):
+    def score(self, board, pos):
         return 5.1
  
 class Bishop(Piece):
@@ -83,16 +90,16 @@ class Bishop(Piece):
         if self.color == "w": return u'♗'
         else: return u'♝'  
         
-    def moves(self, board):
+    def moves(self, board, pos):
         possible = []
         
         for i in [-1, 1]:
-            possible += GoInDirection(board, self, i, i) #DownLeft/UpRight
-            possible += GoInDirection(board, self, i, -i) #DownRight/UpLeft
+            possible += GoInDirection(board, self, pos, i, i) #DownLeft/UpRight
+            possible += GoInDirection(board, self, pos, i, -i) #DownRight/UpLeft
             
         return possible          
         
-    def score(self, board):
+    def score(self, board, pos):
         return 3.33
 
 class Queen(Piece):
@@ -100,18 +107,18 @@ class Queen(Piece):
         if self.color == "w": return u'♕'
         else: return u'♛'        
         
-    def moves(self, board):
+    def moves(self, board, pos):
         possible = []
         
         for i in [-1, 1]:
-            possible += GoInDirection(board, self, i, 0) #Up/Down
-            possible += GoInDirection(board, self, 0, i) #Left/Right
-            possible += GoInDirection(board, self, i, i) #DownLeft/UpRight
-            possible += GoInDirection(board, self, i, -i) #DownRight/UpLeft
+            possible += GoInDirection(board, self, pos, i, 0) #Up/Down
+            possible += GoInDirection(board, self, pos, 0, i) #Left/Right
+            possible += GoInDirection(board, self, pos, i, i) #DownLeft/UpRight
+            possible += GoInDirection(board, self, pos, i, -i) #DownRight/UpLeft
         
         return possible
 
-    def score(self, board):
+    def score(self, board, pos):
         return 8.8
 
 class Pawn(Piece):
@@ -119,47 +126,48 @@ class Pawn(Piece):
         if self.color == "w": return u'♙'
         else: return u'♟'
         
-    def moves(self, board):
+    def moves(self, board, pos):
         possible = []
         
         if self.color == "w": step = 1
         else: step = -1
         
         #Forward movement
-        valid, cont = ValidMove(board, self, self.row + step, self.col)
-        if valid: possible.append((self.pos, (self.row + step, self.col)))
-        if valid and cont and ((self.row == 1 and self.color == "w") or (self.row == 6 and self.color == "b")): 
-            valid, cont = ValidMove(board, self, self.row + step * 2, self.col)
-            if valid: possible.append((self.pos, (self.row + step * 2, self.col)))
+        valid, cont = ValidMove(board, self, pos.offset(step, 0))
+        if valid: possible.append((pos, pos.offset(step, 0)))
+        if valid and cont and ((pos.row == 1 and self.color == "w") or (pos.row == 6 and self.color == "b")):
+            valid, cont = ValidMove(board, self, pos.offset(step * 2, 0))
+            if valid: possible.append((pos, pos.offset(step * 2, 0)))
             
         #Capture
-        valid, cont = ValidMove(board, self, self.row + step, self.col + 1)
-        if valid and not cont: possible.append((self.pos, (self.row + step, self.col + 1)))        
+        valid, cont = ValidMove(board, self, pos.offset(step, 1))
+        if valid and not cont: possible.append((pos, pos.offset(step, 1)))
             
-        valid, cont = ValidMove(board, self, self.row + step, self.col - 1)
-        if valid and not cont: possible.append((self.pos, (self.row + step, self.col - 1)))        
+        valid, cont = ValidMove(board, self, pos.offset(step, -1))
+        if valid and not cont: possible.append((pos, pos.offset(step, -1)))
 
         return possible
 
-    def score(self, board):
+    def score(self, board, pos):
         return 1
-        
-def ValidMove(board, piece, row, col):
-    if row < 0 or row > 7 or col < 0 or col > 7: #Out of Bounds
+
+
+def ValidMove(board, piece, pos):
+    if not pos: #Out of Bounds
         return False, False
-    elif board[row][col] == "": #Move into empty space.
+    elif board[pos.row][pos.col] == "": #Move into empty space.
         return True, True
-    elif board[row][col].color != piece.color: #Capture
+    elif board[pos.row][pos.col].color != piece.color: #Capture
         return True, False
     else:
         return False, False
 
 
 '''
-Takes in a direction represented by row_incr, col_incr, and 
+Takes in a direction represented by row_incr, col_incr, and starting from Positon pos,
 return all possible valid moves that can be made in that direction.
 '''
-def GoInDirection(board, piece, row_incr, col_incr):
+def GoInDirection(board, piece, pos, row_incr, col_incr):
     moves = []
 
     r_off = row_incr
@@ -167,9 +175,9 @@ def GoInDirection(board, piece, row_incr, col_incr):
 
     cont = True
     while cont:
-        valid, cont = ValidMove(board, piece, piece.row + r_off, piece.col + c_off)
+        valid, cont = ValidMove(board, piece, pos.offset(r_off, c_off))
         if valid:
-            moves.append((piece.pos, piece.offset(r_off, c_off)))
+            moves.append((pos, pos.offset(r_off, c_off)))
 
         r_off += row_incr
         c_off += col_incr
