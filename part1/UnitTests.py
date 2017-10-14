@@ -217,6 +217,44 @@ def run_tests():
     test_case = Board.Parse(test)
     assert(test_case.state[6][3].moves(test_case.state, Position.get(6, 3)) == [(Position.get(6, 3), Position.get(5, 4)),
                                                                                 (Position.get(6, 3), Position.get(5, 2))])
+
+    #Test currently for capturing wrong pawn move
+    test = '........' \
+           '........' \
+           '........' \
+           '........' \
+           '...P....' \
+           '...p....' \
+           '........' \
+           '........'
+    test_case = Board.Parse(test)
+    assert (test_case.state[5][3].moves(test_case.state, Position.get(5, 3)) == [])
+
+    #Test case to verify pawn's first double move
+    test = '........' \
+           '...P....' \
+           '...P....' \
+           '........' \
+           '........' \
+           '...p....' \
+           '...p....' \
+           '........'
+    test_case = Board.Parse(test)
+    assert (test_case.state[1][3].moves(test_case.state, Position.get(1, 3)) == [])
+    assert (test_case.state[6][3].moves(test_case.state, Position.get(6, 3)) == [])
+
+    # Test case to verify pawn's first double move
+    test = '........' \
+           '...P....' \
+           '...p....' \
+           '........' \
+           '........' \
+           '...P....' \
+           '...p....' \
+           '........'
+    test_case = Board.Parse(test)
+    assert (test_case.state[1][3].moves(test_case.state, Position.get(1, 3)) == [])
+    assert (test_case.state[6][3].moves(test_case.state, Position.get(6, 3)) == [])
     
     #Queen movement
     test = '........' \
@@ -312,7 +350,6 @@ def run_tests():
 
     game = Minimax(test_case, 'b', 2, -1)
     res = game.get_next_move()
-    print(res)
     assert res[0] == (Position.get(4, 2), Position.get(3, 2)) or res [0] == (Position.get(5, 3), Position.get(4, 3))
 
     # Testing Minimax at depth 2
@@ -333,16 +370,5 @@ def run_tests():
     res = game.get_next_move()
     assert res[0] == (Position.get(5, 4), Position.get(4, 5))
 
-    #Test currently failing for pawn move
-    test = '........' \
-           '........' \
-           '........' \
-           '........' \
-           '...P....' \
-           '...p....' \
-           '........' \
-           '........'
-    test_case = Board.Parse(test)
-    assert (test_case.state[5][3].moves(test_case.state, Position.get(5, 3)) == [])
 
 if __name__ == "__main__": run_tests()

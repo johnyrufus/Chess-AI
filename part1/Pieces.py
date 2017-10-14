@@ -134,7 +134,7 @@ class Pawn(Piece):
     def __repr__(self):
         if self.color == "w": return u'♙'
         else: return u'♟'
-        
+
     def moves(self, board, pos):
         possible = []
         
@@ -143,10 +143,14 @@ class Pawn(Piece):
         
         #Forward movement
         valid, cont = ValidMove(board, self, pos.offset(step, 0))
-        if valid: possible.append((pos, pos.offset(step, 0)))
-        if valid and cont and ((pos.row == 1 and self.color == "w") or (pos.row == 6 and self.color == "b")):
-            valid, cont = ValidMove(board, self, pos.offset(step * 2, 0))
-            if valid: possible.append((pos, pos.offset(step * 2, 0)))
+        if valid and cont: # Moving into empty space
+            possible.append((pos, pos.offset(step, 0)))
+            # Opening move, verify if 2 steps can be made, step by step
+            if (pos.row == 1 and self.color == "w") or (pos.row == 6 and self.color == "b"):
+                for i in range(1, 3):
+                    valid, cont = ValidMove(board, self, pos.offset(step * i, 0))
+                    if not (valid and cont): break
+                if valid and cont: possible.append((pos, pos.offset(step * i, 0)))
             
         #Capture
         valid, cont = ValidMove(board, self, pos.offset(step, 1))
