@@ -328,7 +328,7 @@ def run_tests():
     test_case = Board.Parse(test)
     game = Minimax(test_case, 'w', 1, -1)
     res = game.get_next_move()
-    assert res[0] == (Position.get(1,6), Position.get(4,3))
+    assert res[0] == (Position.get(1,6), Position.get(1,1))
 
     game = Minimax(test_case, 'b', 1, -1)
     res = game.get_next_move()
@@ -364,7 +364,7 @@ def run_tests():
     test_case = Board.Parse(test)
     game = Minimax(test_case, 'w', 2, -1)
     res = game.get_next_move()
-    assert res[0] == (Position.get(0, 6), Position.get(1, 7))
+    assert res[0] == (Position.get(4,5), Position.get(5,4))
 
     game = Minimax(test_case, 'b', 2, -1)
     res = game.get_next_move()
