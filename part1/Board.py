@@ -9,19 +9,9 @@ class PlayBoard:
     def __init__(self, state):
         self.state = state
         
+    # Alternate representation to correlate with test case verification
     def __repr__(self):
-        #Commenting temporarily for alternative represenation to make it easier to check manually with test cases
-        '''rep = "  | A| B| C| D| E| F| G| H|\n"
-        for i in range(0, 8):
-            row = self.state[7 - i]
-            
-            rep += str(7 - i) + " |"
-            for piece in row:
-                if piece == "": rep += "  |"
-                else: rep += str(piece) + "|"            
-            rep += "\n"
-            #return rep '''
-        # Alternate representation to correlate with test case verification
+    
         def get_repr(piece):
             if piece == '':
                 return '.'
@@ -59,11 +49,11 @@ class PlayBoard:
                     if type(piece) == Pieces.King:
                         if piece.color == side: my_king = True
                         else: opp_king = True
-        
+
         if my_king and not opp_king: points = 999
         if not my_king and opp_king: points = -999
 
-        return round(points, 5)
+        return points
     
     def getmoves(self, side):
         moves = []
@@ -94,6 +84,18 @@ class PlayBoard:
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    def PrintOut(self):
+        #Commenting temporarily for alternative represenation to make it easier to check manually with test cases
+        rep = "  | A| B| C| D| E| F| G| H|\n"
+        for i in range(0, 8):
+            row = self.state[7 - i]
+            
+            rep += str(7 - i) + " |"
+            for piece in row:
+                if piece == "": rep += "  |"
+                else: rep += str(piece) + "|"            
+            rep += "\n"
+        print(rep)
 
 def Parse(raw_input):
     state = []
