@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+
+'''
+https://chessprogramming.wikispaces.com/Simplified+evaluation+function
+'''
+
 import abc
 from Position import Position
-
 
 class Piece():
     def __init__(self, color):
@@ -28,6 +32,15 @@ class Piece():
 
 
 class King(Piece):
+    square_values = [[-30,-40,-40,-50,-50,-40,-40,-30], \
+                     [-30,-40,-40,-50,-50,-40,-40,-30], \
+                     [-30,-40,-40,-50,-50,-40,-40,-30], \
+                     [-30,-40,-40,-50,-50,-40,-40,-30], \
+                     [-20,-30,-30,-40,-40,-30,-30,-20], \
+                     [-10,-20,-20,-20,-20,-20,-20,-10], \
+                     [20, 20,  0,  0,  0,  0, 20, 20], \
+                     [20, 30, 10,  0,  0, 10, 30, 20]]
+
     def __repr__(self):
         if self.color == "w": return u'♔'
         else: return u'♚'
@@ -55,11 +68,27 @@ class King(Piece):
         return possible
 
     def score(self, board, pos):
-        return 0
+        points = 20000
+        
+        if self.color == 'w':
+            points += self.square_values[pos.row][pos.col]
+        else:
+            points += self.square_values[7 - pos.row][7 - pos.col]
+
+        return points
 
 class Knight(Piece):
     move_r = [-2, -1, -2, 1, 2, -1, 2, 1]
     move_c = [-1, -2, 1, -2, -1, 2, 1, 2]
+
+    square_values = [[-50,-40,-30,-30,-30,-30,-40,-50], \
+                     [-40,-20,  0,  0,  0,  0,-20,-40], \
+                     [-30,  0, 10, 15, 15, 10,  0,-30], \
+                     [-30,  5, 15, 20, 20, 15,  5,-30], \
+                     [-30,  0, 15, 20, 20, 15,  0,-30], \
+                     [-30,  5, 10, 15, 15, 10,  5,-30], \
+                     [-40,-20,  0,  5,  5,  0,-20,-40], \
+                     [-50,-40,-30,-30,-30,-30,-40,-50]]
     
     def __repr__(self):
         if self.color == "w": return u'♘'
@@ -75,9 +104,25 @@ class Knight(Piece):
         return possible
 
     def score(self, board, pos):
-        return 3.2
-   
+        points = 320
+
+        if self.color == 'w':
+            points += self.square_values[pos.row][pos.col]
+        else:
+            points += self.square_values[7 - pos.row][7 - pos.col]
+
+        return points
+    
 class Rook(Piece):
+    square_values = [[0,  0,  0,  0,  0,  0,  0,  0], \
+                     [5, 10, 10, 10, 10, 10, 10,  5], \
+                     [-5,  0,  0,  0,  0,  0,  0, -5], \
+                     [-5,  0,  0,  0,  0,  0,  0, -5], \
+                     [-5,  0,  0,  0,  0,  0,  0, -5], \
+                     [-5,  0,  0,  0,  0,  0,  0, -5], \
+                     [-5,  0,  0,  0,  0,  0,  0, -5], \
+                     [0,  0,  0,  5,  5,  0,  0,  0]]
+    
     def __repr__(self):
         if self.color == "w": return u'♖'
         else: return u'♜'    
@@ -91,10 +136,26 @@ class Rook(Piece):
         
         return possible   
 
-    def score(self, board, pos):
-        return 5.1
- 
+    def score(self, board, pos):        
+        points = 500
+        
+        if self.color == 'w':
+            points += self.square_values[pos.row][pos.col]
+        else:
+            points += self.square_values[7 - pos.row][7 - pos.col]
+        
+        return points
+    
 class Bishop(Piece):
+    square_values = [[-20,-10,-10,-10,-10,-10,-10,-20], \
+                     [-10,  0,  0,  0,  0,  0,  0,-10], \
+                     [-10,  0,  5, 10, 10,  5,  0,-10], \
+                     [-10,  5,  5, 10, 10,  5,  5,-10], \
+                     [-10,  0, 10, 10, 10, 10,  0,-10], \
+                     [-10, 10, 10, 10, 10, 10, 10,-10], \
+                     [-10,  5,  0,  0,  0,  0,  5,-10], \
+                     [-20,-10,-10,-10,-10,-10,-10,-20]]
+
     def __repr__(self):
         if self.color == "w": return u'♗'
         else: return u'♝'  
@@ -109,9 +170,26 @@ class Bishop(Piece):
         return possible          
         
     def score(self, board, pos):
-        return 3.33
+        points = 330
+
+        if self.color == 'w':
+            points += self.square_values[pos.row][pos.col]
+        else:
+            points += self.square_values[7 - pos.row][7 - pos.col]
+
+        return points
+
 
 class Queen(Piece):
+    square_values = [[-20,-10,-10, -5, -5,-10,-10,-20], \
+                     [-10,  0,  0,  0,  0,  0,  0,-10], \
+                     [-10,  0,  5,  5,  5,  5,  0,-10], \
+                     [-5,  0,  5,  5,  5,  5,  0, -5], \
+                     [0,  0,  5,  5,  5,  5,  0, -5], \
+                     [-10,  5,  5,  5,  5,  5,  0,-10], \
+                     [-10,  0,  5,  0,  0,  0,  0,-10], \
+                     [-20,-10,-10, -5, -5,-10,-10,-20]]    
+    
     def __repr__(self):
         if self.color == "w": return u'♕'
         else: return u'♛'        
@@ -128,9 +206,25 @@ class Queen(Piece):
         return possible
 
     def score(self, board, pos):
-        return 8.8
+        points = 900
+        
+        if self.color == 'w':
+            points += self.square_values[pos.row][pos.col]
+        else:
+            points += self.square_values[7 - pos.row][7 - pos.col]
+
+        return points
 
 class Pawn(Piece):
+    square_values = [[0,  0,  0,  0,  0,  0,  0,  0], \
+                     [50, 50, 50, 50, 50, 50, 50, 50], \
+                     [10, 10, 20, 30, 30, 20, 10, 10], \
+                     [5,  5, 10, 25, 25, 10,  5,  5], \
+                     [0,  0,  0, 20, 20,  0,  0,  0], \
+                     [5, -5,-10,  0,  0,-10, -5,  5], \
+                     [5, 10, 10,-20,-20, 10, 10,  5], \
+                     [0,  0,  0,  0,  0,  0,  0,  0]]
+
     def __repr__(self):
         if self.color == "w": return u'♙'
         else: return u'♟'
@@ -145,13 +239,13 @@ class Pawn(Piece):
         valid, cont = ValidMove(board, self, pos.offset(step, 0))
         if valid and cont: # Moving into empty space
             possible.append((pos, pos.offset(step, 0)))
-            # Opening move, verify if 2 steps can be made, step by step
-            if (pos.row == 1 and self.color == "w") or (pos.row == 6 and self.color == "b"):
-                for i in range(1, 3):
-                    valid, cont = ValidMove(board, self, pos.offset(step * i, 0))
-                    if not (valid and cont): break
-                if valid and cont: possible.append((pos, pos.offset(step * i, 0)))
             
+            # Opening move, verify if 2 steps can be made, step by step
+            # We already know if we can do +2 via continue from the +1 movement...
+            if cont and ((pos.row == 1 and self.color == "w") or (pos.row == 6 and self.color == "b")):
+                valid, cont = ValidMove(board, self, pos.offset(step * 2, 0))
+                if valid and cont : possible.append((pos, pos.offset(step * 2, 0)))
+                        
         #Capture
         valid, cont = ValidMove(board, self, pos.offset(step, 1))
         if valid and not cont: possible.append((pos, pos.offset(step, 1)))
@@ -161,9 +255,15 @@ class Pawn(Piece):
 
         return possible
 
-    def score(self, board, pos):
-        return 1
-
+    def score(self, board, pos):        
+        points = 100
+        
+        if self.color == 'w':
+            points += self.square_values[pos.row][pos.col]
+        else:
+            points += self.square_values[7 - pos.row][7 - pos.col]
+        
+        return points
 
 def ValidMove(board, piece, pos):
     if not pos: #Out of Bounds
