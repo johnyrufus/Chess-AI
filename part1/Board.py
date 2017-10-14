@@ -21,9 +21,17 @@ class PlayBoard:
                 else: rep += str(piece) + "|"            
             rep += "\n"
             #return rep '''
-        # Alternate representation to correlate with test case verification: Ridiculously long :)
-        return '\n'+'\n'.join([ ''.join(map(lambda piece: '.' if piece == '' else piece.__class__.__name__[0]
-                if piece.color == 'w' else piece.__class__.__name__[0].lower(), row))for row in self.state])
+        # Alternate representation to correlate with test case verification
+        def get_repr(piece):
+            if piece == '':
+                return '.'
+            if piece.__class__.__name__.startswith('Kn'):
+                res = 'N'
+            else:
+                res = piece.__class__.__name__[0]
+            return res if piece.color == 'w' else res.lower()
+
+        return '\n'+'\n'.join([''.join(map(lambda piece: get_repr(piece), row)) for row in self.state])
 
     @staticmethod
     def opponent(player):
@@ -42,11 +50,11 @@ class PlayBoard:
         my_king = False
         opp_king = False
         
-        for row in self.state:
-            for piece in row:
+        for i, row in enumerate(self.state):
+            for j, piece in enumerate(row):
                 if piece != "":
-                    if piece.color == side: points += piece.score(self)
-                    else: points -= piece.score(self)
+                    if piece.color == side: points += piece.score(self, Position.get(i, j))
+                    else: points -= piece.score(self, Position.get(i, j))
                     
                     if type(piece) == Pieces.King:
                         if piece.color == side: my_king = True
@@ -54,7 +62,7 @@ class PlayBoard:
         
         if my_king and not opp_king: points = 999
         if not my_king and opp_king: points = -999
-        
+
         return round(points, 5)
     
     def getmoves(self, side):
@@ -71,20 +79,20 @@ class PlayBoard:
     Given the current location pos, move the piece in pos to its new location specified by new_pos
     create and return a new board to reflect the move and the changed state
     '''
-    # TODO: MORE TEST  CASES NEEDED
     def move(self, pos, new_pos):
         new_state = [row for row in self.state]
         new_state[pos.row] = new_state[pos.row][:pos.col] + [''] + new_state[pos.row][pos.col+1:]
         new_state[new_pos.row] = new_state[new_pos.row][:new_pos.col] + [self.state[pos.row][pos.col]] + new_state[new_pos.row][new_pos.col + 1:]
         return PlayBoard(new_state)
 
-    '''
-    Returns the next set of states for a given player
-    '''
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return all( self.state[i][j] == other.state[i][j] for i in range(0, 8) for j in range(0, 8))
+        else:
+            return False
 
-    # TODO: ADD TEST CASES
-    def get_next_states(self, player):
-        return [self.move(move[0], move[1]) for move in self.getmoves(player)]
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
 
 def Parse(raw_input):

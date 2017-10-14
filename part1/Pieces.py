@@ -17,6 +17,15 @@ class Piece():
     def score(self, board, pos):
         return
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.color == other.color
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 
 class King(Piece):
     def __repr__(self):
