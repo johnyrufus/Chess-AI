@@ -68,12 +68,10 @@ class King(Piece):
         return possible
 
     def score(self, board, pos):
-        points = 20000
-        
         if self.color == 'w':
-            points += self.square_values[pos.row][pos.col]
+            points = 20000 + self.square_values[7 - pos.row][pos.col]
         else:
-            points += self.square_values[7 - pos.row][7 - pos.col]
+            points = -20000 - self.square_values[pos.row][7 - pos.col]
 
         return points
 
@@ -104,12 +102,10 @@ class Knight(Piece):
         return possible
 
     def score(self, board, pos):
-        points = 320
-
         if self.color == 'w':
-            points += self.square_values[pos.row][pos.col]
+            points = 320 + self.square_values[7 - pos.row][pos.col]
         else:
-            points += self.square_values[7 - pos.row][7 - pos.col]
+            points = -320 - self.square_values[pos.row][7 - pos.col]
 
         return points
     
@@ -137,12 +133,10 @@ class Rook(Piece):
         return possible   
 
     def score(self, board, pos):        
-        points = 500
-        
         if self.color == 'w':
-            points += self.square_values[pos.row][pos.col]
+            points = 500 + self.square_values[7 - pos.row][pos.col]
         else:
-            points += self.square_values[7 - pos.row][7 - pos.col]
+            points = -500 - self.square_values[pos.row][7 - pos.col]
         
         return points
     
@@ -170,12 +164,10 @@ class Bishop(Piece):
         return possible          
         
     def score(self, board, pos):
-        points = 330
-
         if self.color == 'w':
-            points += self.square_values[pos.row][pos.col]
+            points = 330 + self.square_values[7 - pos.row][pos.col]
         else:
-            points += self.square_values[7 - pos.row][7 - pos.col]
+            points = -330 - self.square_values[pos.row][7 - pos.col]
 
         return points
 
@@ -206,12 +198,10 @@ class Queen(Piece):
         return possible
 
     def score(self, board, pos):
-        points = 900
-        
         if self.color == 'w':
-            points += self.square_values[pos.row][pos.col]
+            points = 900 + self.square_values[7 - pos.row][pos.col]
         else:
-            points += self.square_values[7 - pos.row][7 - pos.col]
+            points = -900 - self.square_values[pos.row][7 - pos.col]
 
         return points
 
@@ -256,12 +246,10 @@ class Pawn(Piece):
         return possible
 
     def score(self, board, pos):        
-        points = 100
-        
         if self.color == 'w':
-            points += self.square_values[pos.row][pos.col]
+            points = 100 + self.square_values[7 - pos.row][pos.col]
         else:
-            points += self.square_values[7 - pos.row][7 - pos.col]
+            points = -100 - self.square_values[pos.row][7 - pos.col]
         
         return points
 
