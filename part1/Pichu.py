@@ -12,25 +12,31 @@ N/n = Nighthawk = Knight
 Rules: no castling, no check, no en passant.
 '''
 import Board
+import Algorithms
 from datetime import datetime
     
 if __name__ == "__main__":
     start_time = datetime.now()
  
     player = 'w'
-    state =   '.RBQKB.R' \
+    state =   'RNBQKBNR' \
             + 'PPPPPPPP' \
             + '........' \
-            + '....n...' \
-            + '.N.pN...' \
-            + '.b..p...' \
-            + 'ppp..ppp' \
-            + 'rnbq.rk.'
+            + '........' \
+            + '........' \
+            + '........' \
+            + 'pppppppp' \
+            + 'rnbqkbnr'
     time_limit = 10
-    
+
     root = Board.Parse(state)
     print(root.PrintOut())
     
-    game = Minimax(root, 'w', 3, -1)
-    res = game.get_next_move()
-    print(res[1].PrintOut())
+    
+    game = Algorithms.Minimax(root, 'w', 3, -1)
+    
+    move = game.MiniMaxSearch()
+    print(move)
+    
+    print(root.move(move[0], move[1]).PrintOut())
+    print(root.move(move[0], move[1]).score())
