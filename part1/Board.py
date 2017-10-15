@@ -3,7 +3,6 @@
 
 import Pieces
 from Position import Position
-import copy
 
 class PlayBoard:
     def __init__(self, state):
@@ -34,24 +33,23 @@ class PlayBoard:
     def is_terminal(self):
         return len([1 for row in self.state for piece in row if type(piece) == Pieces.King]) != 2
 
-    def score(self, side):
+    def score(self):
         points = 0
         
-        my_king = False
-        opp_king = False
+        w_king = False
+        b_king = False
         
         for i, row in enumerate(self.state):
             for j, piece in enumerate(row):
                 if piece != "":
-                    if piece.color == side: points += piece.score(self, Position.get(i, j))
-                    else: points -= piece.score(self, Position.get(i, j))
+                    points += piece.score(self, Position.get(i, j))
                     
                     if type(piece) == Pieces.King:
-                        if piece.color == side: my_king = True
-                        else: opp_king = True
+                        if piece.color == "w": w_king = True
+                        else: b_king = True
 
-        if my_king and not opp_king: points = 999
-        if not my_king and opp_king: points = -999
+        if w_king and not b_king: points = 999
+        if b_king and not w_king: points = -999
 
         return points
     
@@ -104,7 +102,7 @@ def Parse(raw_input):
         row = []
         for c in range(0, 8):
             char = raw_input[r*8+c]
-            pos = Position.get(r, c)
+
             if char == "K": row.append(Pieces.King("w"))
             elif char == "k": row.append(Pieces.King("b"))
             elif char == "P": row.append(Pieces.Pawn("w"))
