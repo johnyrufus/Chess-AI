@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
 
@@ -31,12 +30,9 @@ if __name__ == "__main__":
 
     root = Board.Parse(state)
     print(root.PrintOut())
-    
-    
-    game = Algorithms.Minimax(root, 'w', 3, -1)
+
+    game = Algorithms.Minimax(root, 'w', 1, -1)
     
     move = game.MiniMaxSearch()
-    print(move)
-    
-    print(root.move(move[0], move[1]).PrintOut())
-    print(root.move(move[0], move[1]).score())
+    root = root.move(move[0], move[1])
+    print(Board.Print(root))
