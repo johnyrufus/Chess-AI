@@ -327,12 +327,12 @@ def run_tests():
            '........'
     test_case = Board.Parse(test)
     game = Minimax(test_case, 'w', 1, -1)
-    res = game.get_next_move()
-    assert res[0] == (Position.get(1,6), Position.get(1,1))
+    res = game.MiniMaxSearch()
+    assert res == (Position.get(1,6), Position.get(1,1))
 
     game = Minimax(test_case, 'b', 1, -1)
-    res = game.get_next_move()
-    assert res[0] == (Position.get(1, 1), Position.get(0, 3))
+    res = game.MiniMaxSearch()
+    assert res == (Position.get(1, 1), Position.get(0, 3))
 
     # Testing Minimax at depth 2
     test = 'K.P.Q...' \
@@ -345,12 +345,12 @@ def run_tests():
            '........'
     test_case = Board.Parse(test)
     game = Minimax(test_case, 'w', 2, -1)
-    res = game.get_next_move()
-    assert res[0] == (Position.get(0, 4), Position.get(0, 3))
+    res = game.MiniMaxSearch()
+    assert res == (Position.get(0, 4), Position.get(0, 3))
 
     game = Minimax(test_case, 'b', 2, -1)
-    res = game.get_next_move()
-    assert res[0] == (Position.get(4, 2), Position.get(3, 2)) or res [0] == (Position.get(5, 3), Position.get(4, 3))
+    res = game.MiniMaxSearch()
+    assert res == (Position.get(4, 2), Position.get(3, 2)) or res == (Position.get(5, 3), Position.get(4, 3))
 
     # Testing Minimax at depth 2
     test = 'K.P...B.' \
@@ -363,12 +363,26 @@ def run_tests():
            '........'
     test_case = Board.Parse(test)
     game = Minimax(test_case, 'w', 2, -1)
-    res = game.get_next_move()
-    assert res[0] == (Position.get(4,5), Position.get(5,4))
+    res = game.MiniMaxSearch()
+    assert res == (Position.get(0, 6), Position.get(1, 7))
 
     game = Minimax(test_case, 'b', 2, -1)
-    res = game.get_next_move()
-    assert res[0] == (Position.get(5, 4), Position.get(4, 5))
+    res = game.MiniMaxSearch()
+    assert res == (Position.get(5, 4), Position.get(4, 5))
 
+    test =   'RNBQKBNR' \
+            + 'PPPPPPPP' \
+            + '........' \
+            + '........' \
+            + '........' \
+            + '........' \
+            + 'pppppppp' \
+            + 'rnbqkbnr'
+            
+    test_case = Board.Parse(test)
+    test_ret = Board.Print(test_case)
+    
+    assert(test == test_ret)
+    
 
 if __name__ == "__main__": run_tests()
