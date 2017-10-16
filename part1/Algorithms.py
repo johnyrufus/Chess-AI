@@ -18,15 +18,24 @@ class Minimax:
             .format(self.initial_player, self.time, self.max_depth, self.initial_board.__repr__())
             
     def MiniMaxSearch(self):
-        max_score = -float('inf')
         move = None
         
-        for pos in self.initial_board.getmoves(self.initial_player):
-            score = self.min_value(self.initial_board.move(pos[0], pos[1]), self.initial_board.opponent(self.initial_player), -float('inf'), float('inf'), 0)
+        if self.initial_player == "w":        
+            max_score = -float('inf')
+            for pos in self.initial_board.getmoves(self.initial_player):
+                score = self.min_value(self.initial_board.move(pos[0], pos[1]), self.initial_board.opponent(self.initial_player), -float('inf'), float('inf'), 0)
 
-            if score > max_score:
-                max_score = score
-                move = pos
+                if score > max_score:
+                    max_score = score
+                    move = pos
+        else:
+            max_score = float('inf')
+            for pos in self.initial_board.getmoves(self.initial_player):
+                score = self.max_value(self.initial_board.move(pos[0], pos[1]), self.initial_board.opponent(self.initial_player), -float('inf'), float('inf'), 0)
+            
+                if score < max_score:
+                    max_score = score
+                    move = pos
         return move
                 
     def max_value(self, board, player, alpha, beta, depth):
