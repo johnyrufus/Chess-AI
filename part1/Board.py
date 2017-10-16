@@ -118,4 +118,20 @@ def Parse(raw_input):
             else: row.append("")
         state.append(row)
 
-    return PlayBoard(state)    
+    return PlayBoard(state)
+
+def Print(board):
+    state = ""
+    
+    for row in board.state:
+        for cell in row:
+            if cell == "": state += "."
+            if type(cell) == Pieces.King: state += "k" if cell.color == "b" else "K"
+            if type(cell) == Pieces.Queen: state += "q" if cell.color == "b" else "Q"
+            if type(cell) == Pieces.Rook: state += "r" if cell.color == "b" else "R"
+            if type(cell) == Pieces.Knight: state += "n" if cell.color == "b" else "N"
+            if type(cell) == Pieces.Bishop: state += "b" if cell.color == "b" else "B"
+            if type(cell) == Pieces.Pawn: state += "p" if cell.color == "b" else "P"
+            
+    return state
+            
