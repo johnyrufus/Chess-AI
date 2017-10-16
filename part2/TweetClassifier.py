@@ -41,7 +41,7 @@ def getTokens(tweet):
     '''
     Returns a list of tokens after removing punctuation and stopwords + lower-casing
     '''
-    # TODO: stem the words
+    # TODO: try stemming the words
     # remove HTML special entities (such as '&gt;') first
     s = removeSpecialEntities(tweet)
     # lower-case so that each use of a word is coalesced, regardless of case
@@ -57,6 +57,11 @@ class TweetClassifier():
     '''
     train() method determines priors for P(location), P(token | location)
     test() method applies naive Bayes classification to each tweet
+    
+    TODO - Experiment with the following model parameters:
+        1. Stem the tokens vs. don't stem
+        2. Threshold for occurrence of word in training corpus (i.e., exclude rare terms)
+        3. Laplace smoothing vs. exclusion of rare or previously unobserved term
     '''
     
     def __init__(self, tokenOccurrenceThreshold = 4):

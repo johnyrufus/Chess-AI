@@ -70,6 +70,12 @@ class testTweetClassifier(unittest.TestCase):
         actual = getTokens(tweet)
         self.assertListEqual(expected, actual)
 
+    def test_getTokens_RemovesCarriageReturns(self):
+        tweet = "He hasn't gone Jogging \r or ruNniNg; \rand stick-BAll?! No! BASEBALL."
+        expected = ['gone','jogging','running','stick-ball','baseball']
+        actual = getTokens(tweet)
+        self.assertListEqual(expected, actual)
+
 if __name__ == '__main__':
     unittest.main()
 
