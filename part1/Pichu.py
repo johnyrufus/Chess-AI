@@ -13,6 +13,26 @@ Rules: no castling, no check, no en passant.
 import Board
 import Algorithms
 from datetime import datetime
+from multiprocessing import Process
+
+def basic_parallel_minimax(board, player, time):
+
+    def worker(i):
+        game = Algorithms.Minimax(board, player, i, time)
+        move = game.MiniMaxSearch()
+        new_board = board.move(move[0], move[1])
+        print(new_board)
+
+    max_depth = 4
+    procs = list()
+    for i in range(1, max_depth+1):
+        p = Process(target=worker, args=(i,))
+        procs.append(p)
+        p.start()
+
+    for p in procs:
+        p.join()
+
     
 if __name__ == "__main__":
     start_time = datetime.now()
@@ -31,8 +51,6 @@ if __name__ == "__main__":
     root = Board.Parse(state)
     print(root.PrintOut())
 
-    game = Algorithms.Minimax(root, 'w', 1, -1)
-    
-    move = game.MiniMaxSearch()
-    root = root.move(move[0], move[1])
-    print(Board.Print(root))
+    basic_parallel_minimax(root, 'w', -1)
+
+
