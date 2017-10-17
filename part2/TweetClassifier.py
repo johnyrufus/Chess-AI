@@ -8,6 +8,7 @@ import re
 from collections import Counter, defaultdict
 from nltk.corpus import stopwords
 import string
+import numpy as np
 
 class Prediction():
     
@@ -60,21 +61,32 @@ class TweetClassifier():
     
     TODO - Experiment with the following model parameters:
         1. Stem the tokens vs. don't stem
-        2. Threshold for occurrence of word in training corpus (i.e., exclude rare terms)
+        2. Threshold for occurrence of word in training corpus (i.e., to exclude rare terms)
         3. Laplace smoothing vs. exclusion of rare or previously unobserved term
+        4. Binary appearance of word in tweet vs. including multiple occurrences
     '''
     
-    def __init__(self, tokenOccurrenceThreshold = 4):
+    def __init__(self, tokenOccurrenceThreshold = 1):
         '''
         Inputs:
             tokenOccurrenceThreshold = minimum number of occurrences of token 
             for it to be used in predicting location
         '''
+        self.tokenOccurrenceThreshold = tokenOccurrenceThreshold
+        
+        # accumulators
+        self.numTweets = 0
         self.tweetCounts = Counter()
         self.wordCounts = Counter()
         self.tokens = defaultdict(Counter)
-        self.tokenOccurrenceThreshold
     
+        # probability tables
+        self.locationPrior = None # will be a ndarray of log(P(location))
+        self.tokenPriors = {} # dictionary: key = token, value = ndarray of P(token|location)
+        
+        # dictionary to keep track of locations
+        self.locations = dict()
+        
     def train(self, tweets):
         '''
         Returns dictionary of token/key to [dictionary of locations (keys) to
@@ -83,7 +95,6 @@ class TweetClassifier():
         Input:
             tweets - list of strings. First token = location, remainder = tweet
         '''
-        self.numTweets = 0
         for t in tweets:
             self.numTweets += 1
             loc, tweet = getLocationAndTweet(t)
@@ -120,13 +131,36 @@ class TweetClassifier():
             logarithms, which will prevent underflow (see 
         https://nlp.stanford.edu/IR-book/html/htmledition/naive-bayes-text-classification-1.html)
         '''
-        self.locationPrior = dict(float)
-        for k in self.tweetCounts.keys():
-            self.locationPrior[k] = self.tweetCounts[k] / self.numTweets
+        locationDistribution = []
+        for i, location in enumerate(self.tweetCounts):
+            self.locations[i] = location
+            locationDistribution.append(self.tweetCounts[location] / self.numTweets)
+        self.locationPrior = np.array(locationDistribution)
         
+        # Laplace smoothing step 1: add number of terms to word count
+        sizeVocabulary = len(self.tokens)
+        for key in self.wordCount:
+            self.WordCount[key] += sizeVocabulary 
+        
+        # Laplace smoothing step 2: add 1 to number of occurrences for each word, each location
+        # will do this while building the probability tables for P(token | location)
+        for token in self.tokens:
+            wordBag = self.tokens[token]
+            if sum([wordBag[k] for k in self.locationPrior]) < self.tokenOccurrenceThreshold:
+                continue
+            priors = []
+            for location in self.tweetCounts:
+                priors.append((wordBag[location] + 1) / self.wordCount[location])
+            self.tokenPriors[token] = np.array(priors)
+                
     
     def _predictLocation(self, tweet):
         tokens = getTokens(tweet)
+        numTokens = len(tokens)
+        estimates = self.locationPrior.copy()
+        for token in tokens:
+            estimates *= (self.tokenPriors[token] * numTokens) # multiply by numTokens to help prevent underflow
+        return self.locations[np.argmax(estimates)]                    
     
     def top5PerLocation(self):
         '''
