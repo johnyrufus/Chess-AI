@@ -64,6 +64,7 @@ class TweetClassifier():
         2. Threshold for occurrence of word in training corpus (i.e., to exclude rare terms)
         3. Laplace smoothing vs. exclusion of rare or previously unobserved term
         4. Binary appearance of word in tweet vs. including multiple occurrences
+        5. TF-IDF
     '''
     
     def __init__(self, tokenOccurrenceThreshold = 1):
@@ -77,7 +78,7 @@ class TweetClassifier():
         # accumulators
         self.numTweets = 0
         self.tweetCounts = Counter()
-        self.wordCounts = Counter()
+        self.wordCount = Counter()
         self.tokens = defaultdict(Counter)
     
         # probability tables
@@ -140,7 +141,7 @@ class TweetClassifier():
         # Laplace smoothing step 1: add number of terms to word count
         sizeVocabulary = len(self.tokens)
         for key in self.wordCount:
-            self.WordCount[key] += sizeVocabulary 
+            self.wordCount[key] += sizeVocabulary 
         
         # Laplace smoothing step 2: add 1 to number of occurrences for each word, each location
         # will do this while building the probability tables for P(token | location)

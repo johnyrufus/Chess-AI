@@ -20,13 +20,12 @@ def main():
     nltk.download("stopwords")
     
     trainPath, testPath, outputPath = sys.argv[1], sys.argv[2], sys.argv[3]
-    with open(trainPath,'r',encoding='latin1') as f:
-        trainTweets = list(f)
-    with open(testPath,'r',encoding='latin1') as f:
-        testTweets = list(f)
     classifier = TweetClassifier()
-    classifier.train(trainTweets)
-    predictions = classifier.predict(testTweets)
+    with open(trainPath, 'r', encoding='latin1', newline='\n') as trainTweets:
+        classifier.train(trainTweets)
+    with open(testPath, 'r', encoding='latin1', newline='\n') as testTweets:
+        predictions = classifier.predict(testTweets)
+    
     # print the predictions in required format]
     
     top5PerLocation = classifier.top5PerLocation()
