@@ -159,7 +159,10 @@ class TweetClassifier():
         numTokens = len(tokens)
         estimates = self.locationPrior.copy()
         for token in tokens:
-            estimates *= (self.tokenPriors[token] * numTokens) # multiply by numTokens to help prevent underflow
+            tokenPriors = self.tokenPriors.get(token)
+            if tokenPriors:
+                # multiply by numTokens to help prevent underflow
+                estimates *= (tokenPriors * numTokens) 
         return self.locations[np.argmax(estimates)]                    
     
     def top5PerLocation(self):
