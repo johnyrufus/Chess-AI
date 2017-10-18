@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import Board
+import time
 from multiprocessing import Queue, Process
 
 '''
@@ -24,6 +25,7 @@ class Minimax:
             score = minimax_func(board, player, alpha, beta, depth)
             q.put((i, score))
 
+        start = time.clock() # TODO: Comment this before final
         next_moves = self.initial_board.getmoves(self.initial_player)
 
         if self.initial_player == "w":
@@ -50,8 +52,10 @@ class Minimax:
         i, max_score = comparison_func(res, key=lambda x: x[1])
         suggested_board = self.initial_board.move(next_moves[i][0], next_moves[i][1])
         print(Board.Print(suggested_board))
+        print('Time taken for depth = {} is {}'.format(self.max_depth, time.clock() - start)) # TODO: Comment this before final
 
-        # Not sure of time delay of this, so first print/get the results out and then wait for processes to join.
+        # Not sure of time delay of this, even though I believe this should be quick,
+        # so first print/get the results out as in the statements above and then wait for processes to join.
         if self.max_depth > 2:
             for p in procs:
                 p.join()
