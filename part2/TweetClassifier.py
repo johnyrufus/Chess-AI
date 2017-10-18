@@ -26,9 +26,6 @@ def getLocationAndTweet(s):
     divider = s.find(' ')
     return s[:divider], s[divider + 1:] 
 
-punc = string.punctuation.replace('#','').replace('@','').replace('-','').replace(' ','')
-punctuationRemover = str.maketrans(punc, ' '*len(punc))
-stopWords = set(stopwords.words('english'))
 specialEntitiesRegex = re.compile("&[a-z]+;")
 
 def removeSpecialEntities(s):
@@ -37,6 +34,46 @@ def removeSpecialEntities(s):
         s = s[:m.start()] + s[m.end():]
         m = specialEntitiesRegex.search(s)
     return s
+
+cityInitials = ['la', 'orl', 'washing']
+
+def identifyCityInitials(tokens):
+    initialList = []
+    for token in tokens:
+        for initials in cityInitials:
+            if token.startswith(initials):
+                initialList.append(initials)
+    if (initialList):
+        return tokens + initialList
+    return tokens
+
+monikers = ['ny','york','manh',
+            'dc','beltw',
+            'bean','bost',
+            'chic','windy','illin',
+            'hollyw','angel','lala',
+            'disn','orlan','fl',
+            'sf','bay','fran',
+            'tl','georgia',
+            'houst','tx','tex',
+            'phil','delph','penn',
+            'sd','dieg',
+            'toro','canad','ontar']
+
+def identifyMonikers(tokens):
+    monikerList = []
+    for tok in tokens:
+        for moniker in monikers:
+            if moniker in tok:
+                monikerList.append(moniker)
+    if monikerList:
+        return tokens + monikerList
+    return tokens        
+
+#punc = string.punctuation.replace('#','').replace('@','').replace('-','').replace(' ','') #allow # and @ to be removed
+punc = string.punctuation.replace('-','').replace(' ','')
+punctuationRemover = str.maketrans(punc, ' '*len(punc))
+stopWords = set(stopwords.words('english'))
 
 def getTokens(tweet):
     '''
@@ -49,10 +86,10 @@ def getTokens(tweet):
     s = s.lower()
     # remove punctuation
     s = s.translate(punctuationRemover)
-    # tokenize
-    tokens = s.split()
-    # remove stop words
-    return list(filter(lambda t: t not in stopWords, tokens))   
+    # tokenize + remove stop words
+    tokens = list(filter(lambda t: t not in stopWords, s.split()))
+    tokens = identifyCityInitials(tokens)
+    return identifyMonikers(tokens)
 
 class TweetClassifier():
     '''
@@ -104,7 +141,7 @@ class TweetClassifier():
                 self.wordCount[loc] += 1
                 self.tokens[token][loc] += 1                            
         
-    def test(self, tweets):
+    def predict(self, tweets):
         '''
         Returns list of Prediction objects
         
@@ -136,7 +173,7 @@ class TweetClassifier():
         for i, location in enumerate(self.tweetCounts):
             self.locations[i] = location
             locationDistribution.append(self.tweetCounts[location] / self.numTweets)
-        self.locationPrior = np.array(locationDistribution)
+        self.locationPrior = np.log(np.array(locationDistribution))
         
         # Laplace smoothing step 1: add number of terms to word count
         sizeVocabulary = len(self.tokens)
@@ -147,23 +184,21 @@ class TweetClassifier():
         # will do this while building the probability tables for P(token | location)
         for token in self.tokens:
             wordBag = self.tokens[token]
-            if sum([wordBag[k] for k in self.locationPrior]) < self.tokenOccurrenceThreshold:
+            if sum([wordBag[k] for k in self.tweetCounts]) < self.tokenOccurrenceThreshold:
                 continue
-            priors = []
-            for location in self.tweetCounts:
-                priors.append((wordBag[location] + 1) / self.wordCount[location])
-            self.tokenPriors[token] = np.array(priors)
-                
+            priors = [(wordBag[loc] + 1) / self.wordCount[loc] for loc in self.tweetCounts]
+            self.tokenPriors[token] = np.log(np.array(priors))                
     
     def _predictLocation(self, tweet):
         tokens = getTokens(tweet)
-        numTokens = len(tokens)
+        #numTokens = len(tokens)
         estimates = self.locationPrior.copy()
         for token in tokens:
             tokenPriors = self.tokenPriors.get(token)
-            if tokenPriors:
+            if not tokenPriors is None:
                 # multiply by numTokens to help prevent underflow
-                estimates *= (tokenPriors * numTokens) 
+                #estimates += (tokenPriors * numTokens) 
+                estimates += tokenPriors
         return self.locations[np.argmax(estimates)]                    
     
     def top5PerLocation(self):

@@ -17,16 +17,19 @@ def getLocation(tweet):
 
 def main():
     # make sure the list of stop words is available
-    nltk.download("stopwords")
+    #nltk.download("stopwords")
     
-    trainPath, testPath, outputPath = sys.argv[1], sys.argv[2], sys.argv[3]
-    classifier = TweetClassifier()
+    #trainPath, testPath, outputPath = sys.argv[1], sys.argv[2], sys.argv[3]
+    trainPath, testPath, thresholdOccurrences = sys.argv[1], sys.argv[2], int(sys.argv[3])
+    classifier = TweetClassifier(thresholdOccurrences)
     with open(trainPath, 'r', encoding='latin1', newline='\n') as trainTweets:
         classifier.train(trainTweets)
     with open(testPath, 'r', encoding='latin1', newline='\n') as testTweets:
         predictions = classifier.predict(testTweets)
     
-    # print the predictions in required format]
+    # print the predictions in required format
+    correct = sum([p.predicted == p.actual for p in predictions])
+    print("Accuracy = " + str(correct / len(predictions)))
     
     top5PerLocation = classifier.top5PerLocation()
     # print top 5 predicted words per location
