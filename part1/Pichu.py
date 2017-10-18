@@ -12,6 +12,7 @@ Rules: no castling, no check, no en passant.
 '''
 import Board
 import Algorithms
+import time
 from datetime import datetime
 from multiprocessing import Process
 
@@ -40,6 +41,7 @@ def basic_parallel_minimax(board, player, time):
     
 if __name__ == "__main__":
     start_time = datetime.now()
+    start = time.clock()
  
     player = 'w'
     state =   'RNBQKBNR' \
@@ -56,5 +58,6 @@ if __name__ == "__main__":
     print(root.PrintOut())
 
     basic_parallel_minimax(root, 'w', -1)
+    print('Time taken for Pichu overall execution -  {} '.format(time.clock() - start))  # TODO: Comment this before final
 
 
