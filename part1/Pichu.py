@@ -10,21 +10,22 @@ K/k = Kingfisher = King
 N/n = Nighthawk = Knight
 Rules: no castling, no check, no en passant.
 '''
+import sys
 import Board
 import Algorithms
 import time
 from datetime import datetime
 from multiprocessing import Process
 
-def basic_parallel_minimax(board, player, time):
+def basic_parallel_minimax(player, board, time):
 
     def worker(i):
         game = Algorithms.Minimax(board, player, i, time)
         move = game.MiniMaxSearch()
         new_board = board.move(move[0], move[1])
-        print(new_board)
+        #print(new_board)
 
-    max_depth = 3
+    max_depth = 2
     procs = list()
 
     # For depths upto 2,  handle it serially, rest handle them parallely.
@@ -45,19 +46,19 @@ if __name__ == "__main__":
  
     player = 'w'
     state =   'RNBQKBNR' \
-            + 'PPPPPPPP' \
+            + 'PPPP.PPP' \
+            + '....P...' \
             + '........' \
             + '........' \
-            + '........' \
-            + '........' \
-            + 'pppppppp' \
+            + '.......p' \
+            + 'ppppppp.' \
             + 'rnbqkbnr'
     time_limit = 10
 
     root = Board.Parse(state)
-    print(root.PrintOut())
+    #print(root.PrintOut())
 
-    basic_parallel_minimax(root, 'w', -1)
-    print('Time taken for Pichu overall execution -  {} '.format(time.clock() - start))  # TODO: Comment this before final
+    basic_parallel_minimax(sys.argv[1], Board.Parse(sys.argv[2]), int(sys.argv[3]))
+    #print('Time taken for Pichu overall execution -  {} '.format(time.clock() - start))  # TODO: Comment this before final
 
 

@@ -52,7 +52,7 @@ class Minimax:
         i, max_score = comparison_func(res, key=lambda x: x[1])
         suggested_board = self.initial_board.move(next_moves[i][0], next_moves[i][1])
         print(Board.Print(suggested_board))
-        print('Time taken for depth = {} is {}'.format(self.max_depth, time.clock() - start)) # TODO: Comment this before final
+        #print('Time taken for depth = {} is {}'.format(self.max_depth, time.clock() - start)) # TODO: Comment this before final
 
         # Not sure of time delay of this, even though I believe this should be quick,
         # so first print/get the results out as in the statements above and then wait for processes to join.
