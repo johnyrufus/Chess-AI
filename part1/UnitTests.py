@@ -384,5 +384,34 @@ def run_tests():
     
     assert(test == test_ret)
     
+    test =   '........' \
+            + '........' \
+            + '........' \
+            + '........' \
+            + '........' \
+            + '........' \
+            + 'P.......' \
+            + '........'
+            
+    test_case = Board.Parse(test)
+    test_move = test_case.move(Position(6, 0), Position(7, 0))
+    check = '........................................................Q.......'
+    assert(Board.Print(test_move) == check)
+
+    test =   '........' \
+            + 'p.......' \
+            + '........' \
+            + '........' \
+            + '........' \
+            + '........' \
+            + '........' \
+            + '........'
+            
+    test_case = Board.Parse(test)
+    test_move = test_case.move(Position(1, 0), Position(0, 0))
+    check = 'q...............................................................'
+    assert(Board.Print(test_move) == check)
+
+    
 
 if __name__ == "__main__": run_tests()
