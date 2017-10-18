@@ -71,6 +71,15 @@ class PlayBoard:
         new_state = [row for row in self.state]
         new_state[pos.row] = new_state[pos.row][:pos.col] + [''] + new_state[pos.row][pos.col+1:]
         new_state[new_pos.row] = new_state[new_pos.row][:new_pos.col] + [self.state[pos.row][pos.col]] + new_state[new_pos.row][new_pos.col + 1:]
+        
+        piece = new_state[new_pos.row][new_pos.col]
+        if type(piece) == Pieces.Pawn and piece.color == "w" and new_pos.row == 7:
+            new_queen = Pieces.Queen("w")
+            new_state[new_pos.row][new_pos.col] = new_queen
+        elif type(piece) == Pieces.Pawn and piece.color == "b" and new_pos.row == 0:
+            new_queen = Pieces.Queen("b")
+            new_state[new_pos.row][new_pos.col] = new_queen
+        
         return PlayBoard(new_state)
 
     def __eq__(self, other):
