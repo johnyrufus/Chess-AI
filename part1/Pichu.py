@@ -25,7 +25,7 @@ def basic_parallel_minimax(player, board, time):
         new_board = board.move(move[0], move[1])
         #print(new_board)
 
-    max_depth = 2
+    max_depth = 3
     procs = list()
 
     # For depths upto 2,  handle it serially, rest handle them parallely.
