@@ -48,8 +48,8 @@ class PlayBoard:
                         if piece.color == "w": w_king = True
                         else: b_king = True
 
-        if w_king and not b_king: points = 999
-        if b_king and not w_king: points = -999
+        if w_king and not b_king: points = 999999999
+        if b_king and not w_king: points = -999999999
 
         return points
     
