@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
+'''
+The Position class is a singleton class that allows easy/fast access to 
+various positions which represent locations on the Chess/Pichu board. The
+class has various functions:
+    
+__init__(): A simple constructor for the class given a row/column.
+__repr__(): Returns a formatting string representation of the class.
+get(): Returns a position with a given row/column. If the singleton collection
+       for the class is None, it constructs all possible positions first.
+offset(): Returns a new position with a given offset from the current position
+'''    
 class Position:
 
     positions = None
