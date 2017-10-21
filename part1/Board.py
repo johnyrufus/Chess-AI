@@ -5,9 +5,15 @@ import Pieces
 from Position import Position
 
 class PlayBoard:
+    '''
+    init function to setup the board with a given state.
+    '''
     def __init__(self, state):
         self.state = state
         
+    '''
+    Prints out a representation of the board for using with print().    
+    '''
     # Alternate representation to correlate with test case verification
     def __repr__(self):
     
@@ -22,17 +28,29 @@ class PlayBoard:
 
         return '\n'+'\n'.join([''.join(map(lambda piece: get_repr(piece), row)) for row in self.state])
 
+    '''
+    A simple convenience function - given the current player, return the
+    opponent.
+    '''
     @staticmethod
     def opponent(player):
         return 'b' if player == 'w' else 'w'
 
     '''
-    A state is terminal, if a king is missing.
-    For the current purposes of the algorithm, doesn't matter which king is missing.
+    A state is terminal if a king is missing. For the current purposes of the 
+    algorithm, doesn't matter which king is missing.
     '''
     def is_terminal(self):
         return len([1 for row in self.state for piece in row if type(piece) == Pieces.King]) != 2
 
+    '''
+    This function scores the board's current state. The score is the sum of all
+    piece values (positive for white, negative for black). If the white king
+    is missing, then the score is override to provide an extreme reward for
+    black. Likewise, if the black king is missing then white gets an extreme
+    reward for the capture. It is assumed that the board is in a terminal
+    state once the king is captured.
+    '''
     def score(self):
         points = 0
         
@@ -53,6 +71,12 @@ class PlayBoard:
 
         return points
     
+    '''
+    Given our current state and the player that is moving, return a list of
+    all possible moves. This is done by iterating through all squares on the
+    board and returning a list of all possible moves gathered from pieces
+    of the same color (side).
+    '''
     def getmoves(self, side):
         moves = []
         
@@ -64,8 +88,9 @@ class PlayBoard:
         return moves
 
     '''
-    Given the current location pos, move the piece in pos to its new location specified by new_pos
-    create and return a new board to reflect the move and the changed state
+    Given the current location pos, move the piece in pos to its new location 
+    specified by new_pos create and return a new board to reflect the move
+    and the changed state
     '''
     def move(self, pos, new_pos):
         new_state = [row for row in self.state]
@@ -82,15 +107,30 @@ class PlayBoard:
         
         return PlayBoard(new_state)
 
+    '''
+    This object function checks to see if two boards are equal to each other.
+    The first check makes sure that we were given a board. Then, it loops
+    through each row and cell to make sure that each piece is the same.
+    '''
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return all( self.state[i][j] == other.state[i][j] for i in range(0, 8) for j in range(0, 8))
         else:
             return False
-
+    '''
+    This object function checks to see if two board states are not equal
+    to each other.
+    '''
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    '''
+    This object function returns a 'prettified' version of the board's state with
+    column and row headers. This was primarily used during testing to make sure
+    that the board state was what we imagined it to be. This was used extensively
+    during unit testing to make sure pieces had correct movement behavior and to
+    let us observed the game as it was being played.
+    '''
     def PrintOut(self):
         #Commenting temporarily for alternative represenation to make it easier to check manually with test cases
         rep = "  | A| B| C| D| E| F| G| H|\n"
@@ -104,6 +144,12 @@ class PlayBoard:
             rep += "\n"
         print(rep)
 
+'''
+This class function takes in a raw string give by the user and parses it into
+a Board object that is populated by pieces or empty strings to denote empty
+spots on the board. Once the board is constructed, we can use it to begin
+playing the game.
+'''
 def Parse(raw_input):
     state = []
     
@@ -129,6 +175,11 @@ def Parse(raw_input):
 
     return PlayBoard(state)
 
+'''
+This class function is the inverse of Parse(). Give a board, it returns
+a string representing the board's state in the formatted required by the 
+assignment.
+'''
 def Print(board):
     state = ""
     
@@ -140,7 +191,5 @@ def Print(board):
             if type(cell) == Pieces.Rook: state += "r" if cell.color == "b" else "R"
             if type(cell) == Pieces.Knight: state += "n" if cell.color == "b" else "N"
             if type(cell) == Pieces.Bishop: state += "b" if cell.color == "b" else "B"
-            if type(cell) == Pieces.Pawn: state += "p" if cell.color == "b" else "P"
-            
+            if type(cell) == Pieces.Pawn: state += "p" if cell.color == "b" else "P"            
     return state
-            
