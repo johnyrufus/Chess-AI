@@ -43,12 +43,10 @@ def basic_parallel_minimax(player, board, timer, start):
         move = game.MiniMaxSearch()
         new_board = board.move(move[0], move[1])
 
-    max_depth = 4
+    max_depth = 3
     procs = list()
 
     # For depths upto 2,  handle it serially, rest handle them parallely.
-    for i in range(1, 3):
-        worker(i)
     for i in range(3, max_depth+1):
         p = Process(target=worker, args=(i,))
         procs.append(p)
