@@ -85,7 +85,8 @@ class Minimax:
 
         i, max_score = comparison_func(res, key=lambda x: x[1])
         suggested_board = self.initial_board.move(next_moves[i][0], next_moves[i][1])
-        print(Board.Print(suggested_board))
+        
+        if self.max_depth == 3 or (time.time() < (self.timer + self.start)): print(Board.Print(suggested_board))
         #print('Time taken for depth = {} is {}'.format(self.max_depth, time.clock() - start)) # TODO: Comment this before final
 
         # Not sure of time delay of this, even though I believe this should be quick,
@@ -116,7 +117,7 @@ class Minimax:
     of alpha and value which is used in min_value.
     '''
     def max_value(self, board, player, alpha, beta, depth, timer, start):
-        if depth > self.max_depth or board.is_terminal() or (time.clock() - start)/timer > 0.9: return board.score()
+        if depth > self.max_depth or board.is_terminal() or (((time.time() - start)/timer > 0.9) and self.max_depth==3) or (((time.time() - start)/timer > 1.0) and self.max_depth>3): return board.score()
 
         value = -float('inf')
         for pos in board.getmoves(player):
@@ -142,7 +143,7 @@ class Minimax:
     in order to update the searching in max_value.
     '''
     def min_value(self, board, player, alpha, beta, depth, timer, start):
-        if depth > self.max_depth or board.is_terminal() or (time.clock() - start)/timer > 0.9: return board.score()
+        if depth > self.max_depth or board.is_terminal() or (((time.time() - start)/timer > 0.9) and self.max_depth==3) or (((time.time() - start)/timer > 1.0) and self.max_depth>3): return board.score()
         
         value = float('inf')
         for pos in board.getmoves(player):
