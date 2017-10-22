@@ -14,13 +14,12 @@ import sys
 import Board
 import Algorithms
 import time
-from datetime import datetime
 from multiprocessing import Process
 
-def basic_parallel_minimax(player, board, time):
+def basic_parallel_minimax(player, board, timer, start):
 
     def worker(i):
-        game = Algorithms.Minimax(board, player, i, time)
+        game = Algorithms.Minimax(board, player, i, timer, start)
         move = game.MiniMaxSearch()
         new_board = board.move(move[0], move[1])
         #print(new_board)
@@ -41,7 +40,6 @@ def basic_parallel_minimax(player, board, time):
 
     
 if __name__ == "__main__":
-    start_time = datetime.now()
     start = time.clock()
  
     player = 'w'
@@ -57,8 +55,5 @@ if __name__ == "__main__":
 
     root = Board.Parse(state)
     #print(root.PrintOut())
-
     basic_parallel_minimax(sys.argv[1], Board.Parse(sys.argv[2]), int(sys.argv[3]))
     #print('Time taken for Pichu overall execution -  {} '.format(time.clock() - start))  # TODO: Comment this before final
-
-
