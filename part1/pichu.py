@@ -43,20 +43,13 @@ def basic_parallel_minimax(player, board, timer, start):
         move = game.MiniMaxSearch()
         new_board = board.move(move[0], move[1])
 
-    max_depth = 3
-    procs = list()
+    max_depth = 10
 
     # For depths upto 2,  handle it serially, rest handle them parallely.
     for i in range(3, max_depth+1):
-        p = Process(target=worker, args=(i,))
-        procs.append(p)
-        p.start()
-
-    for p in procs:
-        p.join()
-
+        if time.time() < (timer + start): worker(i)
     
 if __name__ == "__main__":
-    start = time.clock()
+    start = time.time()
  
     basic_parallel_minimax(sys.argv[1], Board.Parse(sys.argv[2]), int(sys.argv[3]), start)
