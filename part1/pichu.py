@@ -61,4 +61,4 @@ def basic_parallel_minimax(player, board, timer, start):
 if __name__ == "__main__":
     start = time.clock()
  
-    basic_parallel_minimax(sys.argv[1], Board.Parse(sys.argv[2]), int(sys.argv[3]))
+    basic_parallel_minimax(sys.argv[1], Board.Parse(sys.argv[2]), int(sys.argv[3]), start)
