@@ -79,11 +79,11 @@ class testTweetClassifier(unittest.TestCase):
     def test_top5PerLocation(self):
         tweets = ["Manhattan,_NY Mambo, Mambo! Hottest dance in Manhattan! Come to the NY disco!",
                   "Manhattan,_NY Tango, Tango! Hottest dance in NYC! party tonight!",
-                  "Los_Angeles,_CA Simpson Garcetti Clark Rams Chargers"]
+                  "Los_Angeles,_CA Simpson Garcetti Clark Rams Chargers",
+                  "Los_Angeles,_CA Simpson Garcetti Clark Rams Chargers Dodgers"]
         classifier = TweetClassifier(1)
         classifier.train(tweets)
         top5List = classifier.top5PerLocation()
-        print(top5List.keys())
         expectedManhattan = set(["ny","mambo","hottest","dance","tango"])
         actualManhattan = set(top5List["Manhattan,_NY"])
         self.assertSetEqual(expectedManhattan, actualManhattan)

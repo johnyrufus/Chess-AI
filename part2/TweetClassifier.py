@@ -73,9 +73,10 @@ def identifyMonikers(tokens):
 
 printable = set(string.printable)
 #punc = string.punctuation.replace('#','').replace('@','').replace('-','').replace(' ','') #allow # and @ to be removed
-punc = string.punctuation.replace('-','').replace(' ','')
+punc = string.punctuation.replace(' ','')
 punctuationRemover = str.maketrans(punc, ' '*len(punc))
-stopWords = set(stopwords.words('english'))
+commonTweetWords = ['job','hiring','jobs','careerarc'] + list("abcdefghijklmnopqrstuvwxyz") + list("01234456789")
+stopWords = set(stopwords.words('english') + commonTweetWords)
 
 def getTokens(tweet):
     '''
@@ -159,7 +160,7 @@ class TweetClassifier():
             * Probability of a tweet (regardless of content) being from a location.
               Must be calculated for each location, should sum to 1.0 over all locations
             * Probability that a token will be in a tweet, given a location
-              Must be calculated for each token whose count exceed min threshold,
+              Must be calculated for each token whose count exceeds min threshold,
               over all locations
         Token probabilities will omit tokens that occur less than the threshold
         Token probabilities will use LaPlace smoothing to allow predictions to use
@@ -193,8 +194,6 @@ class TweetClassifier():
         for token in tokens:
             tokenPriors = self.tokenPriors.get(token)
             if not tokenPriors is None:
-                # multiply by numTokens to help prevent underflow
-                #estimates += (tokenPriors * numTokens) 
                 estimates += tokenPriors
         return self.locations[np.argmax(estimates)]                    
     
@@ -211,7 +210,7 @@ class TweetClassifier():
             cityDict[i] = city
         vocabDf = pd.DataFrame.from_dict(self.tokenPriors, orient='index').rename(columns = cityDict)
         for city in cities:
-            dfCity = vocabDf[[city]].nlargest(5, columns = city)
+            dfCity = vocabDf[[city]].nlargest(20, columns = city)
             top5Dict[city] = list(dfCity.index)
         return top5Dict
         
