@@ -36,6 +36,17 @@ def removeSpecialEntities(s):
         m = specialEntitiesRegex.search(s)
     return s
 
+parsedLocations = set()
+def parseLocationMonikers(location, monikers):
+    if location in parsedLocations:
+        return
+    extractMonikersFromLocation(location, monikers)
+    parsedLocations.add(location)
+
+def extractMonikersFromLocation(location, monikers):
+    # TODO: write this function!
+    pass
+
 cityInitials = ['la', 'orl', 'washing']
 
 def identifyCityInitials(tokens):
@@ -48,20 +59,7 @@ def identifyCityInitials(tokens):
         return tokens + initialList
     return tokens
 
-monikers = ['ny','york','manh',
-            'dc','beltw',
-            'bean','bost',
-            'chic','windy','illin',
-            'hollyw','angel','lala',
-            'disn','orlan','fl',
-            'sf','bay','fran',
-            'tl','georgia',
-            'houst','tx','tex',
-            'phil','delph','penn',
-            'sd','dieg',
-            'toro','canad','ontar']
-
-def identifyMonikers(tokens):
+def identifyMonikers(tokens, monikers):
     monikerList = []
     for tok in tokens:
         for moniker in monikers:
@@ -72,29 +70,11 @@ def identifyMonikers(tokens):
     return tokens        
 
 printable = set(string.printable)
-#punc = string.punctuation.replace('#','').replace('@','').replace('-','').replace(' ','') #allow # and @ to be removed
-punc = string.punctuation.replace(' ','')
+punc = string.punctuation.replace(' ','') # don't remove spaces! They demarcate words
 punctuationRemover = str.maketrans(punc, ' '*len(punc))
-commonTweetWords = ['job','hiring','jobs','careerarc'] + list("abcdefghijklmnopqrstuvwxyz") + list("01234456789")
+commonTweetWords = ['job','hiring','jobs','careerarc','street','opening','work','apply','st'] 
+commonTweetWords += list("abcdefghijklmnopqrstuvwxyz") + list("01234456789")
 stopWords = set(stopwords.words('english') + commonTweetWords)
-
-def getTokens(tweet):
-    '''
-    Returns a list of tokens after removing punctuation and stopwords + lower-casing
-    '''
-    # TODO: try stemming the words
-    # remove HTML special entities (such as '&gt;') first
-    s = removeSpecialEntities(tweet)
-    # strip unprintable characters
-    s = ''.join(filter(lambda x: x in printable, s))
-    # lower-case so that each use of a word is coalesced, regardless of case
-    s = s.lower()
-    # remove punctuation
-    s = s.translate(punctuationRemover)
-    # tokenize + remove stop words
-    tokens = list(filter(lambda t: t not in stopWords, s.split()))
-    tokens = identifyCityInitials(tokens)
-    return identifyMonikers(tokens)
 
 class TweetClassifier():
     '''
@@ -102,13 +82,13 @@ class TweetClassifier():
     test() method applies naive Bayes classification to each tweet
     '''
     
-    def __init__(self, tokenOccurrenceThreshold = 1):
+    def __init__(self, isDynamicLocations = False):
         '''
         Inputs:
             tokenOccurrenceThreshold = minimum number of occurrences of token 
             for it to be used in predicting location
         '''
-        self.tokenOccurrenceThreshold = tokenOccurrenceThreshold
+        self.tokenOccurrenceThreshold = 1
         
         # accumulators
         self.numTweets = 0
@@ -123,6 +103,43 @@ class TweetClassifier():
         # dictionary to keep track of locations
         self.locations = dict()
         
+        # extracting monikers
+        self.isDynamicLocations = isDynamicLocations
+        if isDynamicLocations:
+            self.monikers = set()
+        else:
+            self.monikers = set(['ny','york','manh',
+            'dc',
+            'bost',
+            'chic','illin',
+            'hollw','angel',
+            'orlan','fl',
+            'sf','bay','fran',
+            'tl','georgia',
+            'houst','tx','tex',
+            'phil','delph','penn',
+            'sd','dieg',
+            'toro','canad','ontar'])
+        
+    def getTokens(self,tweet):
+        '''
+        Returns a list of tokens after removing punctuation and stopwords + lower-casing
+        '''
+        # TODO: try stemming the words
+        # remove HTML special entities (such as '&gt;') first
+        s = removeSpecialEntities(tweet)
+        # strip unprintable characters
+        s = ''.join(filter(lambda x: x in printable, s))
+        # lower-case so that each use of a word is coalesced, regardless of case
+        s = s.lower()
+        # remove punctuation
+        s = s.translate(punctuationRemover)
+        # tokenize + remove stop words
+        tokens = list(filter(lambda t: t not in stopWords, s.split()))
+        tokens = identifyCityInitials(tokens)
+        tokens = identifyMonikers(tokens, self.monikers)
+        return tokens
+
     def train(self, tweets):
         '''
         Returns dictionary of token/key to [dictionary of locations (keys) to
@@ -135,7 +152,9 @@ class TweetClassifier():
             self.numTweets += 1
             loc, tweet = getLocationAndTweet(t)
             self.tweetCounts[loc] += 1
-            for token in getTokens(tweet):
+            if self.isDynamicLocations:
+                extractMonikersFromLocation(loc, self.monikers)
+            for token in self._getTokens(tweet):
                 self.wordCount[loc] += 1
                 self.tokens[token][loc] += 1  
         self._calculateProbabilities()                          
@@ -188,7 +207,7 @@ class TweetClassifier():
             self.tokenPriors[token] = np.log(np.array(priors))                
     
     def _predictLocation(self, tweet):
-        tokens = getTokens(tweet)
+        tokens = self.getTokens(tweet)
         #numTokens = len(tokens)
         estimates = self.locationPrior.copy()
         for token in tokens:
