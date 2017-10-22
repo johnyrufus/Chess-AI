@@ -9,6 +9,7 @@ from collections import Counter, defaultdict
 from nltk.corpus import stopwords
 import string
 import numpy as np
+import pandas as pd
 
 class Prediction():
     
@@ -70,6 +71,7 @@ def identifyMonikers(tokens):
         return tokens + monikerList
     return tokens        
 
+printable = set(string.printable)
 #punc = string.punctuation.replace('#','').replace('@','').replace('-','').replace(' ','') #allow # and @ to be removed
 punc = string.punctuation.replace('-','').replace(' ','')
 punctuationRemover = str.maketrans(punc, ' '*len(punc))
@@ -82,6 +84,8 @@ def getTokens(tweet):
     # TODO: try stemming the words
     # remove HTML special entities (such as '&gt;') first
     s = removeSpecialEntities(tweet)
+    # strip unprintable characters
+    s = ''.join(filter(lambda x: x in printable, s))
     # lower-case so that each use of a word is coalesced, regardless of case
     s = s.lower()
     # remove punctuation
@@ -95,13 +99,6 @@ class TweetClassifier():
     '''
     train() method determines priors for P(location), P(token | location)
     test() method applies naive Bayes classification to each tweet
-    
-    TODO - Experiment with the following model parameters:
-        1. Stem the tokens vs. don't stem
-        2. Threshold for occurrence of word in training corpus (i.e., to exclude rare terms)
-        3. Laplace smoothing vs. exclusion of rare or previously unobserved term
-        4. Binary appearance of word in tweet vs. including multiple occurrences
-        5. TF-IDF
     '''
     
     def __init__(self, tokenOccurrenceThreshold = 1):
@@ -139,7 +136,8 @@ class TweetClassifier():
             self.tweetCounts[loc] += 1
             for token in getTokens(tweet):
                 self.wordCount[loc] += 1
-                self.tokens[token][loc] += 1                            
+                self.tokens[token][loc] += 1  
+        self._calculateProbabilities()                          
         
     def predict(self, tweets):
         '''
@@ -148,7 +146,6 @@ class TweetClassifier():
         Input:
             tweets = list of tweets. First token = location, remainder = tweet
         '''
-        self._calculateProbabilities()
         result = []
         for t in tweets:
             loc, tweet = getLocationAndTweet(t)
@@ -207,4 +204,15 @@ class TweetClassifier():
             key = location
             value = list of 5 words that predict most highly for the location
         '''
-        pass
+        top5Dict = {}
+        cityDict = {}
+        cities = list(self.tweetCounts.keys())
+        for i, city in enumerate(cities):
+            cityDict[i] = city
+        vocabDf = pd.DataFrame.from_dict(self.tokenPriors, orient='index').rename(columns = cityDict)
+        for city in cities:
+            dfCity = vocabDf[[city]].nlargest(5, columns = city)
+            top5Dict[city] = list(dfCity.index)
+        return top5Dict
+        
+        
