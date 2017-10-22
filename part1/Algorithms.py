@@ -9,20 +9,21 @@ from multiprocessing import Queue, Process
 Implements the mini max algorithm
 '''
 class Minimax:
-    def __init__(self, board, player, depth, time):
+    def __init__(self, board, player, depth, timer, start):
         self.initial_board = board
         self.initial_player = player
-        self.time = time
         self.max_depth = depth
+        self.timer = timer
+        self.start = start
 
     def __repr__(self):
         return 'Current player - {}, bounded by time - {}, depth - {} and the board - \n {}'\
-            .format(self.initial_player, self.time, self.max_depth, self.initial_board.__repr__())
+            .format(self.initial_player, self.timer, self.max_depth, self.initial_board.__repr__())
 
     def MiniMaxSearch(self):
 
-        def worker(q, i, minimax_func, board, player, alpha, beta, depth):
-            score = minimax_func(board, player, alpha, beta, depth)
+        def worker(q, i, minimax_func, board, player, alpha, beta, depth, timer, start):
+            score = minimax_func(board, player, alpha, beta, depth, timer, start)
             q.put((i, score))
 
         start = time.clock() # TODO: Comment this before final
@@ -42,12 +43,12 @@ class Minimax:
             procs = list()
             q = Queue()
             for i, pos in enumerate(next_moves):
-                p = Process(target=worker, args=(q, i, minimax_func, self.initial_board.move(pos[0], pos[1]), opponent, alpha, beta, depth))
+                p = Process(target=worker, args=(q, i, minimax_func, self.initial_board.move(pos[0], pos[1]), opponent, alpha, beta, depth, self.timer, self.start))
                 procs.append(p)
                 p.start()
             res = [q.get() for _ in next_moves]
         else:
-            res = [(i, minimax_func(self.initial_board.move(pos[0], pos[1]), opponent, alpha, beta, depth)) for i, pos in enumerate(next_moves)]
+            res = [(i, minimax_func(self.initial_board.move(pos[0], pos[1]), opponent, alpha, beta, depth, self.timer, self.start)) for i, pos in enumerate(next_moves)]
 
         i, max_score = comparison_func(res, key=lambda x: x[1])
         suggested_board = self.initial_board.move(next_moves[i][0], next_moves[i][1])
@@ -62,23 +63,23 @@ class Minimax:
 
         return next_moves[i]
                 
-    def max_value(self, board, player, alpha, beta, depth):
-        if depth > self.max_depth or board.is_terminal(): return board.score()
+    def max_value(self, board, player, alpha, beta, depth, timer, start):
+        if depth > self.max_depth or board.is_terminal() or (time.clock() - start)/timer > 0.9: return board.score()
 
         value = -float('inf')
         for pos in board.getmoves(player):
-            value = max(value, self.min_value(board.move(pos[0], pos[1]), board.opponent(player), alpha, beta, depth+1))
+            value = max(value, self.min_value(board.move(pos[0], pos[1]), board.opponent(player), alpha, beta, depth+1, timer, start))
             if value >= beta:
                 return value
             alpha = max(alpha, value)
         return value
     
-    def min_value(self, board, player, alpha, beta, depth):
-        if depth > self.max_depth or board.is_terminal(): return board.score()
+    def min_value(self, board, player, alpha, beta, depth, timer, start):
+        if depth > self.max_depth or board.is_terminal() or (time.clock() - start)/timer > 0.9: return board.score()
         
         value = float('inf')
         for pos in board.getmoves(player):
-            value = min(value, self.max_value(board.move(pos[0], pos[1]), board.opponent(player), alpha, beta, depth+1))
+            value = min(value, self.max_value(board.move(pos[0], pos[1]), board.opponent(player), alpha, beta, depth+1, timer, start))
             if value <= alpha:
                 return value
             beta = min(beta, value)
