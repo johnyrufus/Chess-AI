@@ -7,6 +7,7 @@ Created on Sat Oct 14 22:24:52 2017
 import re
 from collections import Counter, defaultdict
 from nltk.corpus import stopwords
+from nltk import download
 import string
 import numpy as np
 import pandas as pd
@@ -57,6 +58,9 @@ def identifyMonikers(tokens, monikers):
     if monikerList:
         return tokens + monikerList
     return tokens        
+
+# make sure the list of stop words is available
+download("stopwords")
 
 printable = set(string.printable)
 punc = string.punctuation.replace(' ','') # don't remove spaces! They demarcate words
