@@ -13,10 +13,7 @@ def printWordsForLocation(location, words):
     print("Location: " + location + " Top 5: " + str(words))
     
 
-def main():
-    # make sure the list of stop words is available
-    nltk.download("stopwords")
-    
+def main():    
     trainPath, testPath, outputPath = sys.argv[1], sys.argv[2], sys.argv[3]
     classifierDynamic = TweetClassifier(True)
     with open(trainPath, 'r', encoding='latin1', newline='\n') as trainTweets:
