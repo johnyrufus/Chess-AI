@@ -25,7 +25,7 @@ def is_valid(b, r, c, r1, c1, f, p, s, sc, sr):
 
 def mini_max(b, f, fop, fi, d, md):
     if len([1 for r in b for p in r if p.lower() == 'k']) != 2: return [-999, b] if f == fi else [999, b]
-    if d > md: return [len([1 for r in b for p in r if p != '.' and fi(p)]) - (len([1 for r in b for p in r if p != '.']) - len([1 for r in b for p in r if p != '.' and fi(p)])), b]
+    if d > md: return [sum([{'q':9, 'r':5, 'b':3, 'n':3, 'k':0, 'p':1}[p.lower()] for row in b for p in row if p != '.' and fi(p)]) + len([1 for r in b for p in r if p != '.' and fi(p)]) - (len([1 for r in b for p in r if p != '.']) - len([1 for r in b for p in r if p != '.' and fi(p)])), b]
     return (max if f == fi else min)([mini_max(get_board(b, pos[0], pos[1]), fop, f, fi, d + 1, md) for pos in get_moves(b, f)], key=operator.itemgetter(0)) + [b]
 
 if __name__ == "__main__":
