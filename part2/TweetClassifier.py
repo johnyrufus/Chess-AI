@@ -36,17 +36,6 @@ def removeSpecialEntities(s):
         m = specialEntitiesRegex.search(s)
     return s
 
-parsedLocations = set()
-def parseLocationMonikers(location, monikers):
-    if location in parsedLocations:
-        return
-    extractMonikersFromLocation(location, monikers)
-    parsedLocations.add(location)
-
-def extractMonikersFromLocation(location, monikers):
-    # TODO: write this function!
-    pass
-
 cityInitials = ['la', 'orl', 'washing']
 
 def identifyCityInitials(tokens):
@@ -75,6 +64,31 @@ punctuationRemover = str.maketrans(punc, ' '*len(punc))
 commonTweetWords = ['job','hiring','jobs','careerarc','street','opening','work','apply','st'] 
 commonTweetWords += list("abcdefghijklmnopqrstuvwxyz") + list("01234456789")
 stopWords = set(stopwords.words('english') + commonTweetWords)
+
+parsedLocations = set()
+def parseLocationMonikers(location, monikers):
+    if location in parsedLocations:
+        return
+    extractMonikersFromLocation(location, monikers)
+    parsedLocations.add(location)
+
+def extractMonikersFromLocation(location, monikers):
+    # remove the comma(s) and lower-case
+    location = location.replace(',', '').lower()    
+    # get the individual words
+    tokens = location.split('_')
+    for t in tokens:
+        if len(t) > 4:
+            monikers.add(t[0:4])
+        else:
+            monikers.add(t)
+    numTokens = len(tokens)
+    if numTokens > 2:
+        abbreviation = ''
+        numInitials = numTokens - 1
+        for i in range(numInitials):
+            abbreviation += tokens[i][0]
+        monikers.add(abbreviation)
 
 class TweetClassifier():
     '''
@@ -121,7 +135,7 @@ class TweetClassifier():
             'sd','dieg',
             'toro','canad','ontar'])
         
-    def getTokens(self,tweet):
+    def _getTokens(self,tweet):
         '''
         Returns a list of tokens after removing punctuation and stopwords + lower-casing
         '''
@@ -207,7 +221,7 @@ class TweetClassifier():
             self.tokenPriors[token] = np.log(np.array(priors))                
     
     def _predictLocation(self, tweet):
-        tokens = self.getTokens(tweet)
+        tokens = self._getTokens(tweet)
         #numTokens = len(tokens)
         estimates = self.locationPrior.copy()
         for token in tokens:
@@ -229,7 +243,7 @@ class TweetClassifier():
             cityDict[i] = city
         vocabDf = pd.DataFrame.from_dict(self.tokenPriors, orient='index').rename(columns = cityDict)
         for city in cities:
-            dfCity = vocabDf[[city]].nlargest(20, columns = city)
+            dfCity = vocabDf[[city]].nlargest(5, columns = city)
             top5Dict[city] = list(dfCity.index)
         return top5Dict
         
