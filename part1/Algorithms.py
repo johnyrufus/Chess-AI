@@ -17,6 +17,10 @@ tree originating from the root node. Each process searches down to max_depth
 and then returns the estimated board value. If 90% of the time allotted has 
 been consumed before reaching max depth then the search begins to roll up in 
 order to provide a recommendation in the time given. 
+
+References:
+The Berkeley site was used to help outline alpha/beta pruning:
+http://aima.cs.berkeley.edu/python/games.html
 '''
 class Minimax:
     '''
