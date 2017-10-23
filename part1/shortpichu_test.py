@@ -10,7 +10,7 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 8)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 8)
 
 test = '........' \
        '........' \
@@ -21,7 +21,7 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 3)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 3)
 
 test = '........' \
        '........' \
@@ -32,9 +32,9 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 8)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 8)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 3)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 3)
 
 test = '........' \
        '........' \
@@ -45,9 +45,9 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 8)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 8)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 5)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 5)
 
 test = '........' \
        '........' \
@@ -58,7 +58,7 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 8)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 8)
 
 test = '........' \
        '..P.P...' \
@@ -69,7 +69,7 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 8)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 8)
 
 test = '........' \
        '..P.P...' \
@@ -80,9 +80,9 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 8)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 8)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 8)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 8)
 
 test = '........' \
        '........' \
@@ -93,9 +93,9 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 5)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 5)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 4)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 4)
 
 test = '........' \
        '........' \
@@ -106,9 +106,9 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 3)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 3)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 0)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 0)
 
 test = '........' \
        '........' \
@@ -119,9 +119,9 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 4)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 4)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 6)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 6)
 
 test = '........' \
        '........' \
@@ -132,9 +132,9 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 4)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 4)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 0)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 0)
 
 test = '........' \
        '........' \
@@ -145,7 +145,7 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 1)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 1)
 
 test = '........' \
        '........' \
@@ -156,7 +156,7 @@ test = '........' \
        '........' \
        '........'
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 1)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 1)
 
 test = '........' \
        '........' \
@@ -167,9 +167,9 @@ test = '........' \
        '...p....' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 4)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 4)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 3)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 3)
 
 test = '........' \
        '........' \
@@ -180,9 +180,9 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 0)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 0)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 0)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 0)
 
 test = '........' \
        '...P....' \
@@ -193,9 +193,9 @@ test = '........' \
        '...p....' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 1)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 1)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 1)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 1)
 
 test = '........' \
        '...P....' \
@@ -206,9 +206,9 @@ test = '........' \
        '...p....' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 0)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 0)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 0)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 0)
 
 test = '........' \
        '........' \
@@ -219,7 +219,7 @@ test = '........' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 27)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 27)
 
 test = '........' \
        '........' \
@@ -230,9 +230,9 @@ test = '........' \
        '...p....' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 4)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 4)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 3)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 3)
 
 test = '...K....' \
        '.n....Q.' \
@@ -243,9 +243,9 @@ test = '...K....' \
        '........' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 26)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 26)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 12)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 12)
 
 test = 'K.P.Q...' \
        '........' \
@@ -256,9 +256,9 @@ test = 'K.P.Q...' \
        '..ppp...' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 18)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 18)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 3)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 3)
 
 test = 'K.P...B.' \
        '........' \
@@ -269,9 +269,9 @@ test = 'K.P...B.' \
        '..ppp...' \
        '........'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 9)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 9)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 6)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 6)
 
 test =   'RNBQKBNR' \
        + 'PPPPPPPP' \
@@ -282,9 +282,9 @@ test =   'RNBQKBNR' \
        + 'pppppppp' \
        + 'rnbqkbnr'
 p = 'w'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 12)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 12)
 p = 'b'
-assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower, str.islower if p == 'w' else str.isupper)) == 12)
+assert(len(get_moves([list(test[i:i + 8]) for i in range(0, 64, 8)], str.isupper if p == 'w' else str.islower )) == 12)
 
 test =   'RNBQKBNR' \
            + 'PPPPPPPP' \
